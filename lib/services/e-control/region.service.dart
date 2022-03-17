@@ -5,9 +5,8 @@ class RegionService extends ApiService {
 
   RegionService(String basePath) : super(basePath, "/regions");
 
-  Future<Region> getRegions({includeCities = true}) {
+  Future<List<Region>> getRegions({includeCities = true}) {
     return fetchData({"includeCities": includeCities}, null)
-        .then((Map<String, dynamic> json) => Region.fromJson(json));
+        .then((json) => regionFromJson(json));
   }
-
 }

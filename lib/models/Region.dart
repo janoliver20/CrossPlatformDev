@@ -26,7 +26,7 @@ class Region {
     required this.name,
     this.postalCodes,
     this.subRegions,
-    this.type,
+    required this.regionType,
   });
 
   List<String>? cities;
@@ -34,7 +34,7 @@ class Region {
   String name;
   List<String>? postalCodes;
   List<dynamic>? subRegions;
-  String? type;
+  RegionType regionType;
 
   factory Region.fromJson(Map<String, dynamic> json) => Region(
     cities: List<String>.from(json["cities"].map((x) => x)),
@@ -42,7 +42,7 @@ class Region {
     name: json["name"],
     postalCodes: List<String>.from(json["postalCodes"].map((x) => x)),
     subRegions: List<dynamic>.from(json["subRegions"].map((x) => x)),
-    type: json["type"],
+    regionType: RegionType.values.firstWhere((e) => e.toString() == json["type"].toString().toLowerCase())
   );
 
   Map<String, dynamic> toJson() => {
@@ -51,6 +51,6 @@ class Region {
     "name": name,
     "postalCodes": List<dynamic>.from(postalCodes?.map((x) => x) ?? const Iterable.empty()),
     "subRegions": List<dynamic>.from(subRegions?.map((x) => x) ?? const Iterable.empty()),
-    "type": type,
+    "type": getRegionType(regionType),
   };
 }

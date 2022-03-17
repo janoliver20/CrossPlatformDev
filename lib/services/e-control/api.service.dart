@@ -11,8 +11,8 @@ abstract class ApiService {
     _apiPath = path;
   }
 
-  Future<Map<String, dynamic>> fetchData(Map<String, dynamic> parameters, String? extraPath)
+  Future<String> fetchData(Map<String, dynamic> parameters, String? extraPath)
   {
-    return RestService.get(_basePath, _apiPath, parameters).then((String response) => jsonDecode(response));
+    return RestService.get(_basePath, _apiPath, parameters);
   }
 }

@@ -261,18 +261,20 @@ class Price {
   });
 
   int amount;
-  String fuelType;
+  FuelType fuelType;
   String label;
 
   factory Price.fromJson(Map<String, dynamic> json) => Price(
     amount: json["amount"],
-    fuelType: json["fuelType"],
+    fuelType: FuelType
+        .values
+        .firstWhere((e) => e.toString() == json["fuelType"].toString().toLowerCase()),
     label: json["label"],
   );
 
   Map<String, dynamic> toJson() => {
     "amount": amount,
-    "fuelType": fuelType,
+    "fuelType": getFuelType(fuelType),
     "label": label,
   };
 }
