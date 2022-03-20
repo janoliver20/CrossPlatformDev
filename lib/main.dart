@@ -1,7 +1,24 @@
 import 'package:Me_Fuel/Screens/DemoScreen.dart';
-import 'package:flutter/material.dart';
+import 'dart:developer';
 
-void main() {
+import 'package:Me_Fuel/models/GasStation.dart';
+import 'package:Me_Fuel/models/Region.dart';
+import 'package:Me_Fuel/services/e-control/e-control_api.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+Future<void> main() async {
+  await dotenv.load();
+  var econtrol = EControlAPI();
+  // econtrol.queryRegionUnits().then((value) {
+  //   inspect(value);
+  // });
+  // econtrol.queryRegions().then((value) {
+  //   inspect(value);
+  // });
+  econtrol.queryGasStationsByRegion(code: 1, regionType: RegionType.bl, includeClosed: false, fuelType: FuelType.die).then((value) {
+    inspect(value);
+  });
   runApp(const MyApp());
 }
 
@@ -96,4 +113,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
