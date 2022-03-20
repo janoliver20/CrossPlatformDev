@@ -6,7 +6,7 @@ import '../../models/GasStation.dart';
 import '../../models/Region.dart';
 
 class GasStationFuelMerge extends GasStationService {
-  GasStationFuelMerge(String basePath) : super(basePath);
+  GasStationFuelMerge(String baseUri, String basePath) : super(baseUri, basePath);
 
   Future<List<GasStation>> getAllFuelTypesByAddress({required double latitude, required double longitude, includeClosed = false}) {
     var multipleFutures = FuelType.values
@@ -18,7 +18,7 @@ class GasStationFuelMerge extends GasStationService {
         });
   }
 
-  Future<List<GasStation>> getAllFuelTypesByRegion({required String code, required RegionType regionType, includeClosed = false}) {
+  Future<List<GasStation>> getAllFuelTypesByRegion({required int code, required RegionType regionType, includeClosed = false}) {
     var multipleFutures = FuelType.values
         .map((fuelType) => super
         .getByRegion(code: code, regionType: regionType, fuelType: fuelType, includeClosed: includeClosed));

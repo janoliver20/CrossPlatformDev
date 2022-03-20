@@ -65,8 +65,8 @@ class Municipality {
     required this.postal,
   });
 
-  int lat;
-  int long;
+  double lat;
+  double long;
   String name;
   String postal;
 

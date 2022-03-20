@@ -43,7 +43,7 @@ class GasStation {
   });
 
   Contact? contact;
-  int distance;
+  double distance;
   int id;
   Location location;
   String name;
@@ -53,7 +53,7 @@ class GasStation {
   String? otherServiceOffers;
   PaymentArrangements? paymentArrangements;
   PaymentMethods paymentMethods;
-  int? position;
+  double? position;
   List<Price> prices;
 
   factory GasStation.fromJson(Map<String, dynamic> json) => GasStation(
@@ -128,8 +128,8 @@ class Location {
 
   String address;
   String city;
-  int latitude;
-  int longitude;
+  double latitude;
+  double longitude;
   String postalCode;
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
@@ -260,7 +260,7 @@ class Price {
     required this.label,
   });
 
-  int amount;
+  double amount;
   FuelType fuelType;
   String label;
 

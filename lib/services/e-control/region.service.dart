@@ -4,9 +4,9 @@ import 'api.service.dart';
 
 class RegionService extends ApiService {
 
-  RegionService(String basePath) : super(basePath, "/regions");
+  RegionService(String baseUri, String basePath) : super(baseUri, basePath + "/regions");
 
-  Future<List<Region>> getRegions({includeCities = true}) {
+  Future<List<Region>> getRegions({includeCities = false}) {
     return fetchData({"includeCities": includeCities}, null)
         .then((json) => regionFromJson(json));
   }
