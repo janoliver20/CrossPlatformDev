@@ -1,5 +1,10 @@
+import 'dart:async';
+
 import 'package:Me_Fuel/Screens/DemoScreen.dart';
+import 'package:Me_Fuel/screens/MapScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -51,6 +56,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    checkForLocationPermission();
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -59,13 +70,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final List<Widget> _pages = <Widget>[
 
-    new DemoScreen(),
-    new DemoScreen()
+    DemoScreen(),
+    MapScreen()
 
   ];
 
   static const List<String> _pageTitles = <String>[
-    "Demo Screen 1", "Demo Screen 2"
+    "Demo Screen 1", "Map"
   ];
 
   @override
@@ -77,6 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
 
+
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -87,13 +100,31 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.list), label: "Demo Screen 1"),
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: "Demo Screen 2")
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map")
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
+
       // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+
+
+  Future<void> checkForLocationPermission() async {
+
+
+    //TODO Show dialog for asking for permission
+    final status = await Permission.location.status;
+    if (status == PermissionStatus.granted) {
+      print('Permission granted');
+    } else if (status == PermissionStatus.denied) {
+      print('Permission denied! Ask again for Permission');
+    } else if (status == PermissionStatus.permanentlyDenied) {
+      await openAppSettings();
+    }
+
   }
 }
 
