@@ -3,16 +3,20 @@ import 'dart:convert';
 import 'package:Me_Fuel/services/rest.service.dart';
 
 abstract class ApiService {
-  String _basePath = "localhost";
+  String _baseUri = "localhost";
   String _apiPath = "";
 
-  ApiService(String basePath, String path) {
-    _basePath = basePath;
+  ApiService(String baseUri, String path) {
+    _baseUri = baseUri;
     _apiPath = path;
   }
 
   Future<String> fetchData(Map<String, dynamic> parameters, String? extraPath)
   {
-    return RestService.get(_basePath, _apiPath, parameters);
+    // parameters.forEach((key, value) {
+    //   parameters[key] = value.toString();
+    // });
+    var param = parameters.map((key, value) => MapEntry(key, value.toString()));
+    return RestService.get(_baseUri, _apiPath + (extraPath ?? ""), param);
   }
 }

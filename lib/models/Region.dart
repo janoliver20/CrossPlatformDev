@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'dart:developer';
+
 enum RegionType {
   bl,
   pb
@@ -21,36 +23,32 @@ String regionToJson(List<Region> data) => json.encode(List<dynamic>.from(data.ma
 
 class Region {
   Region({
-    this.cities,
     required this.code,
-    required this.name,
-    this.postalCodes,
-    this.subRegions,
     required this.regionType,
+    required this.name,
+    required this.subRegions,
+    required this.postalCodes,
   });
 
-  List<String>? cities;
   int code;
-  String name;
-  List<String>? postalCodes;
-  List<dynamic>? subRegions;
   RegionType regionType;
+  String name;
+  List<Region> subRegions;
+  List<String> postalCodes;
 
   factory Region.fromJson(Map<String, dynamic> json) => Region(
-    cities: List<String>.from(json["cities"].map((x) => x)),
     code: json["code"],
+    regionType: RegionType.values.firstWhere((e) => e.toString().toLowerCase().contains(json["type"].toString().toLowerCase())),
     name: json["name"],
-    postalCodes: List<String>.from(json["postalCodes"].map((x) => x)),
-    subRegions: List<dynamic>.from(json["subRegions"].map((x) => x)),
-    regionType: RegionType.values.firstWhere((e) => e.toString() == json["type"].toString().toLowerCase())
+    subRegions: List<Region>.from(json["subRegions"].map((x) => Region.fromJson(x))),
+    postalCodes: json["postalCodes"] == null ? [] : List<String>.from(json["postalCodes"].map((x) => x)),
   );
 
   Map<String, dynamic> toJson() => {
-    "cities": List<dynamic>.from(cities?.map((x) => x) ?? const Iterable.empty()),
     "code": code,
-    "name": name,
-    "postalCodes": List<dynamic>.from(postalCodes?.map((x) => x) ?? const Iterable.empty()),
-    "subRegions": List<dynamic>.from(subRegions?.map((x) => x) ?? const Iterable.empty()),
     "type": getRegionType(regionType),
+    "name": name,
+    "subRegions": List<dynamic>.from(subRegions.map((x) => x.toJson())),
+    "postalCodes": List<dynamic>.from(postalCodes.map((x) => x)),
   };
 }

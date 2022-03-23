@@ -1,12 +1,29 @@
 import 'dart:async';
 
 import 'package:Me_Fuel/Screens/DemoScreen.dart';
+import 'dart:developer';
+
+import 'package:Me_Fuel/models/GasStation.dart';
+import 'package:Me_Fuel/models/Region.dart';
+import 'package:Me_Fuel/services/e-control/e-control_api.dart';
 import 'package:Me_Fuel/screens/MapScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load();
+  var econtrol = EControlAPI();
+  // econtrol.queryRegionUnits().then((value) {
+  //   inspect(value);
+  // });
+  // econtrol.queryRegions().then((value) {
+  //   inspect(value);
+  // });
+  econtrol.queryGasStationsByRegion(code: 1, regionType: RegionType.bl, includeClosed: false, fuelType: FuelType.die).then((value) {
+    inspect(value);
+  });
   runApp(const MyApp());
 }
 
@@ -88,8 +105,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
 
-
-
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -105,7 +120,6 @@ class _MyHomePageState extends State<MyHomePage> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
-
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
@@ -127,4 +141,3 @@ class _MyHomePageState extends State<MyHomePage> {
 
   }
 }
-
