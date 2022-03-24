@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'dart:developer';
+
 enum FuelType {
   die,
   sup,
@@ -28,7 +30,7 @@ String gasStationToJson(List<GasStation> data) => json.encode(List<dynamic>.from
 class GasStation {
   GasStation({
     this.contact,
-    required this.distance,
+    this.distance,
     required this.id,
     required this.location,
     required this.name,
@@ -43,18 +45,18 @@ class GasStation {
   });
 
   Contact? contact;
-  double distance;
+  double? distance;
   int id;
   Location location;
   String name;
   OfferInformation offerInformation;
   bool? open;
-  List<OpeningHour> openingHours;
+  List<OpeningHour> openingHours = [];
   String? otherServiceOffers;
   PaymentArrangements? paymentArrangements;
   PaymentMethods paymentMethods;
-  double? position;
-  List<Price> prices;
+  int? position;
+  List<Price> prices = [];
 
   factory GasStation.fromJson(Map<String, dynamic> json) => GasStation(
     contact: Contact.fromJson(json["contact"]),
@@ -69,7 +71,7 @@ class GasStation {
     paymentArrangements: PaymentArrangements.fromJson(json["paymentArrangements"]),
     paymentMethods: PaymentMethods.fromJson(json["paymentMethods"]),
     position: json["position"],
-    prices: List<Price>.from(json["prices"].map((x) => Price.fromJson(x))),
+    prices: json.containsKey("prices") ? List<Price>.from(json["prices"].map((x) => Price.fromJson(x))) : [],
   );
 
   Map<String, dynamic> toJson() => {
@@ -175,14 +177,14 @@ class OfferInformation {
 
 class OpeningHour {
   OpeningHour({
-    this.day,
-    this.from,
-    this.to,
+    required this.day,
+    required this.from,
+    required this.to,
   });
 
-  String? day;
-  String? from;
-  String? to;
+  String day;
+  String from;
+  String to;
 
   factory OpeningHour.fromJson(Map<String, dynamic> json) => OpeningHour(
     day: json["day"],
@@ -268,7 +270,7 @@ class Price {
     amount: json["amount"],
     fuelType: FuelType
         .values
-        .firstWhere((e) => e.toString() == json["fuelType"].toString().toLowerCase()),
+        .firstWhere((e) => e.toString().toLowerCase().contains(json["fuelType"].toString().toLowerCase())),
     label: json["label"],
   );
 
