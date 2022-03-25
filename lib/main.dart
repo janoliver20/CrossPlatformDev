@@ -21,7 +21,7 @@ Future<void> main() async {
   // econtrol.queryRegions().then((value) {
   //   inspect(value);
   // });
-  econtrol.queryGasStationsByRegion(code: 1, regionType: RegionType.bl, includeClosed: false, fuelType: FuelType.die).then((value) {
+  econtrol.queryGasStationsByRegion(code: 1, regionType: RegionType.bl, includeClosed: false).then((value) {
     inspect(value);
   });
   runApp(const MyApp());
