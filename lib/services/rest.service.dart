@@ -11,7 +11,6 @@ class RestService {
             return response.body;
           }
           return throw Exception("Error fetching data!");
-          return '[]';
         },
         onError: (error) {
           log(error);
