@@ -1,11 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'detailPage.dart';
 import 'package:flutter/foundation.dart';
 
+import 'models/GasStation.dart';
+
 class HomePage extends StatefulWidget {
+
   const HomePage({Key? key}) : super(key: key);
+
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -14,15 +20,19 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // This holds a list of fiction users
   // You can use data fetched from a database or a server as well
+  
+
   final List<Map<String, dynamic>> _allStations = [
     {
       "id": 1,
       "name": "OMV",
       "price": 1.2345,
+      "gasType": "Super",
       "distance": 1.4,
       "location": "Linz"
+
     },
-    {
+    /*{
       "id": 2,
       "name": "Shell",
       "price": 2.2346,
@@ -119,7 +129,7 @@ class _HomePageState extends State<HomePage> {
       "price": 1.8421,
       "distance": 0.9,
       "location": "Feld"
-    },
+    },*/
 
   ];
 
@@ -233,7 +243,7 @@ class _HomePageState extends State<HomePage> {
                           style: const TextStyle(fontSize: 24),
                         ),
                         title: Text(
-                            '${_foundStations[index]["price"].toString()} €'),
+                            '${_foundStations[index]["price"].toString()} € ${_foundStations[index]["gasType"].toString()}'),
                         subtitle: Text(
                             _foundStations[index]["location"].toString()),
                         trailing: Wrap(
