@@ -1,3 +1,4 @@
+import 'package:Me_Fuel/HomePage.dart';
 import 'dart:async';
 
 import 'package:Me_Fuel/Screens/DemoScreen.dart';
@@ -87,13 +88,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final List<Widget> _pages = <Widget>[
 
-    DemoScreen(),
-    MapScreen()
+    new HomePage(),
+    new MapScreen()
 
   ];
 
   static const List<String> _pageTitles = <String>[
-    "Demo Screen 1", "Map"
+    "Tankstellen", "Map"
   ];
 
   @override
@@ -114,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: _pages.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: "Demo Screen 1"),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: "Tankstellen"),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map")
         ],
         currentIndex: _selectedIndex,
