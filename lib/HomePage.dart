@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 import 'detailPage.dart';
 import 'package:flutter/foundation.dart';
+import 'models/Region.dart';
+import 'services/e-control/e-control_api.dart';
 
 import 'models/GasStation.dart';
 
@@ -20,10 +22,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // This holds a list of fiction users
   // You can use data fetched from a database or a server as well
+  final EControlAPI eControlAPI = EControlAPI();
+  late final List<GasStation> _station;
+
+  void getData(){
+    eControlAPI.queryGasStationsByRegion(code: 1, regionType: RegionType.bl).then((value) => _station = value);
+  }
+
   
 
   final List<Map<String, dynamic>> _allStations = [
-    {
+    /*{
       "id": 1,
       "name": "OMV",
       "price": 1.2345,
@@ -32,7 +41,7 @@ class _HomePageState extends State<HomePage> {
       "location": "Linz"
 
     },
-    /*{
+    {
       "id": 2,
       "name": "Shell",
       "price": 2.2346,
