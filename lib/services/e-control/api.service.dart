@@ -13,9 +13,6 @@ abstract class ApiService {
 
   Future<String> fetchData(Map<String, dynamic> parameters, String? extraPath)
   {
-    // parameters.forEach((key, value) {
-    //   parameters[key] = value.toString();
-    // });
     var param = parameters.map((key, value) => MapEntry(key, value.toString()));
     return RestService.get(_baseUri, _apiPath + (extraPath ?? ""), param);
   }

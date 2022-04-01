@@ -7,7 +7,6 @@ class RestService {
     return http.get(uri)
         .then((http.Response response) {
           if(response.statusCode >= 200 && response.statusCode < 300) {
-            log(response.body);
             return response.body;
           }
           return throw Exception("Error fetching data!");

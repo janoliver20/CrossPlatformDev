@@ -1,7 +1,11 @@
-
-
+import 'package:Me_Fuel/main.dart';
+import 'package:Me_Fuel/stores/main_store.dart';
 import 'package:flutter/material.dart';
-import '../main.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
+
+// final getIt = GetIt.instance;
+final store = getIt<MainStore>();
 
 class DemoScreen extends StatefulWidget {
 
@@ -21,14 +25,17 @@ class DemoScreen extends StatefulWidget {
   // case the title) provided by the parent (in this case the App widget) and
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
-
-
   @override
   State<DemoScreen> createState() => _DemoScreenState();
 }
 
 class _DemoScreenState extends State<DemoScreen> {
-  int _counter = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -37,7 +44,7 @@ class _DemoScreenState extends State<DemoScreen> {
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-      _counter++;
+      store.increment();
     });
   }
 
@@ -62,10 +69,10 @@ class _DemoScreenState extends State<DemoScreen> {
             const Text(
               'You have pushed the button this many times on Screen:',
             ),
-            Text(
-              '$_counter',
+            Observer(builder: (_) => Text(
+              '${store.regions.length}',
               style: Theme.of(context).textTheme.headline4,
-            ),
+            ))
           ],
         ),
       ),

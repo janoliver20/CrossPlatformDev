@@ -1,15 +1,21 @@
+import 'dart:math';
+
 import 'package:Me_Fuel/HomePage.dart';
 import 'package:Me_Fuel/Screens/DemoScreen.dart';
-import 'dart:developer';
-
-import 'package:Me_Fuel/models/GasStation.dart';
-import 'package:Me_Fuel/models/Region.dart';
 import 'package:Me_Fuel/services/e-control/e-control_api.dart';
+import 'package:Me_Fuel/stores/main_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mobx/mobx.dart';
+
+final getIt = GetIt.asNewInstance();
+final store = getIt<MainStore>();
 
 Future<void> main() async {
   await dotenv.load();
+  getIt.registerLazySingleton(() => MainStore());
+
   var econtrol = EControlAPI();
   // econtrol.queryRegionUnits().then((value) {
   //   inspect(value);
@@ -17,10 +23,12 @@ Future<void> main() async {
   // econtrol.queryRegions().then((value) {
   //   inspect(value);
   // });
-  econtrol.queryGasStationsByRegion(code: 1, regionType: RegionType.bl, includeClosed: false).then((value) {
-    inspect(value);
-  });
+  // econtrol.queryGasStationsByRegion(code: 1, regionType: RegionType.bl, includeClosed: false).then((value) {
+  //   inspect(value);
+  // });
+
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
@@ -70,9 +78,18 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
+    if (index == 0) {
+      store.increment();
+    }
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    store.getRegions();
   }
 
   final List<Widget> _pages = <Widget>[
