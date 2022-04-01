@@ -1,10 +1,15 @@
 import 'dart:math';
 
 import 'package:Me_Fuel/HomePage.dart';
+import 'dart:async';
+
 import 'package:Me_Fuel/Screens/DemoScreen.dart';
 import 'package:Me_Fuel/services/e-control/e-control_api.dart';
+import 'package:Me_Fuel/screens/MapScreen.dart';
 import 'package:Me_Fuel/stores/main_store.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
@@ -77,6 +82,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    checkForLocationPermission();
+  }
+
   void _onItemTapped(int index) {
     if (index == 0) {
       store.increment();
@@ -95,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _pages = <Widget>[
 
     new HomePage(),
-    new DemoScreen()
+    new MapScreen()
 
   ];
 
@@ -122,12 +133,29 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.list), label: "Tankstellen"),
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: "Karte")
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map")
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+
+
+  Future<void> checkForLocationPermission() async {
+
+
+    //TODO Show dialog for asking for permission
+    final status = await Permission.location.status;
+    if (status == PermissionStatus.granted) {
+      print('Permission granted');
+    } else if (status == PermissionStatus.denied) {
+      print('Permission denied! Ask again for Permission');
+    } else if (status == PermissionStatus.permanentlyDenied) {
+      await openAppSettings();
+    }
+
   }
 }
