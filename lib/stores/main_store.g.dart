@@ -31,6 +31,21 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
+  final _$errorAtom = Atom(name: '_MainStore.error');
+
+  @override
+  dynamic get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(dynamic value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
   final _$_MainStoreActionController = ActionController(name: '_MainStore');
 
   @override
@@ -45,11 +60,35 @@ mixin _$MainStore on _MainStore, Store {
   }
 
   @override
-  void getRegions() {
+  void getRegions({dynamic includeCities = true}) {
     final _$actionInfo =
         _$_MainStoreActionController.startAction(name: '_MainStore.getRegions');
     try {
-      return super.getRegions();
+      return super.getRegions(includeCities: includeCities);
+    } finally {
+      _$_MainStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void getRegionUnits() {
+    final _$actionInfo = _$_MainStoreActionController.startAction(
+        name: '_MainStore.getRegionUnits');
+    try {
+      return super.getRegionUnits();
+    } finally {
+      _$_MainStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void getGasStationsAtCurrentLocation(
+      {FuelType? fuelType, dynamic includeClosed = false}) {
+    final _$actionInfo = _$_MainStoreActionController.startAction(
+        name: '_MainStore.getGasStationsAtCurrentLocation');
+    try {
+      return super.getGasStationsAtCurrentLocation(
+          fuelType: fuelType, includeClosed: includeClosed);
     } finally {
       _$_MainStoreActionController.endAction(_$actionInfo);
     }
@@ -58,6 +97,7 @@ mixin _$MainStore on _MainStore, Store {
   @override
   String toString() {
     return '''
+error: ${error},
 value: ${value}
     ''';
   }

@@ -86,6 +86,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     checkForLocationPermission();
+    store.getRegions();
+    store.getGasStationsAtCurrentLocation();
   }
 
   void _onItemTapped(int index) {
@@ -95,12 +97,6 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _selectedIndex = index;
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    store.getRegions();
   }
 
   final List<Widget> _pages = <Widget>[

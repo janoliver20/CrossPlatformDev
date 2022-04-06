@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as mapLocation;
 import 'package:Me_Fuel/models/GasStation.dart';
-import 'package:location/location.dart';
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:ui' as ui;
@@ -33,7 +32,7 @@ class MapScreenState extends State<MapScreen> {
   mapLocation.Location _location = mapLocation.Location();
   late StreamSubscription _locationSubscription;
   late bool _serviceEnabled;
-  late PermissionStatus _permissionGranted;
+  late mapLocation.PermissionStatus _permissionGranted;
   final EControlAPI _api = EControlAPI();
   List<GasStation> _listGasStations = List.empty();
   Map<MarkerId, Marker> _markersMap = {};
@@ -181,9 +180,9 @@ class MapScreenState extends State<MapScreen> {
 
 
     _permissionGranted = await _location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
+    if (_permissionGranted == mapLocation.PermissionStatus.denied) {
       _permissionGranted = await _location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
+      if (_permissionGranted != mapLocation.PermissionStatus.granted) {
         return;
       }
     }

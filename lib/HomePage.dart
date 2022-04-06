@@ -1,8 +1,12 @@
+import 'package:Me_Fuel/stores/main_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import 'detailPage.dart';
 import 'package:flutter/foundation.dart';
+
+import 'main.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -127,6 +131,7 @@ class _HomePageState extends State<HomePage> {
   Icon _searchIcon = Icon(Icons.search);
   bool isSearchClicked = false;
   final TextEditingController _filter = new TextEditingController();
+  final store = getIt<MainStore>();
 
   // This list holds the data for the list view
   List<Map<String, dynamic>> _foundStations = [];
@@ -142,6 +147,7 @@ class _HomePageState extends State<HomePage> {
   initState() {
     // at the beginning, all users are shown
     _foundStations = _allStations;
+    store.getGasStationsAtCurrentLocation();
     super.initState();
   }
 
@@ -218,57 +224,95 @@ class _HomePageState extends State<HomePage> {
               height: 20,
             ),
             Expanded(
-              child: _foundStations.isNotEmpty
-                  ? ListView.builder(
-                itemCount: _foundStations.length,
-                itemBuilder: (context, index) =>
-                    Card(
-                      key: ValueKey(_foundStations[index]["id"]),
-                      color: Colors.black12,
-                      elevation: 4,
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      child: ListTile(
-                        leading: Text(
-                          _foundStations[index]["name"].toString(),
-                          style: const TextStyle(fontSize: 24),
+              child: Observer(builder: (_) {
+                return store.gasStations.isNotEmpty ?
+                ListView.builder(
+                  itemCount: store.gasStations.length,
+                  itemBuilder: (context, index) =>
+                      Card(
+                        key: ValueKey(store.gasStations[index].id),
+                        color: Colors.black12,
+                        elevation: 4,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: ListTile(
+                            title:  Text(
+                              store.gasStations[index].name,
+                              textScaleFactor: 1.1,
+                            ),
+                            subtitle: Text(
+                              store.gasStations[index].location.address.toString(),
+                              textScaleFactor: 1,
+                            ),
+                            leading: Text(
+                                store.gasStations[index].prices.isNotEmpty
+                                    ? '${store.gasStations[index].prices[0].amount.toString()} €'
+                                    : '-- €'
+                            ),
+                            trailing: Wrap(
+                              spacing: 12, // space between two icons
+                              children: <Widget>[
+                                 Text('${store.gasStations[index].distance?.toStringAsFixed(2) ?? '--'} km'), // Text
+                                    Icon(Icons.star), // icon
+                                 ],
+                              ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) {
+                                  return DetailPage(
+                                    name: store.gasStations[index].name
+                                        .toString(),
+                                    price: store.gasStations[index].prices.isNotEmpty ? store.gasStations[index].prices[0].amount.toString() : "--",
+                                    distance: store.gasStations[index].distance?.toString() ?? "--",
+                                  );
+                                })
+                              );
+                            },
+                          ),
                         ),
-                        title: Text(
-                            '${_foundStations[index]["price"].toString()} €'),
-                        subtitle: Text(
-                            _foundStations[index]["location"].toString()),
-                        trailing: Wrap(
-                          spacing: 12, // space between two icons
-                          children: <Widget>[
-                            Text('${_foundStations[index]["distance"]
-                                .toString()} km'), // Text
-                            //Icon(Icons.star), // icon
-                          ],
-                        ),
-                        //onTap: onTapEvent(context)
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) {
-                                return DetailPage(
-                                  name: _foundStations[index]["name"]
-                                      .toString(),
-                                  price: _foundStations[index]["price"]
-                                      .toString(),
-                                  distance: _foundStations[index]["distance"]
-                                      .toString(),
-                                );
-                              })
-                            //MaterialPageRoute(builder: (context) => const DetailPage()),
-                          );
-                        },
-                      ),
 
-                    ),
-              )
-                  : const Text(
-                'No results found',
-                style: TextStyle(fontSize: 24),
-              ),
+                        // margin: const EdgeInsets.symmetric(vertical: 10),
+                        // child: ListTile(
+                        //   leading: Text(
+                        //     store.gasStations[index].name ?? "--",
+                        //     style: const TextStyle(fontSize: 24),
+                        //   ),
+                        //   title: Text(
+                        //       store.gasStations[index].prices.isNotEmpty
+                        //           ? '${store.gasStations[index].prices[0].amount.toString() ?? "--"} €'
+                        //           : '--€'),
+                        //   // subtitle: Text(
+                        //   //     store.gasStations[index].location.address.toString() ?? "--"),
+                        //   // trailing: Wrap(
+                        //   //   spacing: 12, // space between two icons
+                        //   //   children: <Widget>[
+                        //   //     Text('${store.gasStations[index].distance?.toString() ?? '--'} km'), // Text
+                        //   //     //Icon(Icons.star), // icon
+                        //   //   ],
+                        //   // ),
+                        //   //onTap: onTapEvent(context)
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(builder: (context) {
+                        //           return DetailPage(
+                        //             name: store.gasStations[index].name
+                        //                 .toString() ?? "--",
+                        //             price: store.gasStations[index].prices.isNotEmpty ? store.gasStations[index].prices[0].amount.toString() ?? "0" : '0',
+                        //             distance: store.gasStations[index].distance?.toString() ?? "0",
+                        //           );
+                        //         })
+                        //       //MaterialPageRoute(builder: (context) => const DetailPage()),
+                        //     );
+                        //   },
+                        // ),
+                      ),
+                )  : const Text(
+                  'No results found',
+                  style: TextStyle(fontSize: 24),
+                );
+              })
             ),
           ],
         ),

@@ -33,9 +33,9 @@ class DetailPage extends StatelessWidget {
                 fit: BoxFit.cover,),
               )
             ),*/
-            Image.asset("assets/images/"+name+".png",width: 600,
-              height: 240,
-              fit: BoxFit.cover,),
+            // Image.asset("assets/images/"+name+".png",width: 600,
+            //   height: 240,
+            //   fit: BoxFit.cover,),
           //Text(name.toString(),textAlign: TextAlign.center,style: const TextStyle(fontSize: 40,fontWeight: FontWeight.bold,letterSpacing: 5,shadows:[Shadow(color:Colors.black54, offset:Offset(1,2), blurRadius: 4 ) ]),),
             SizedBox(height: 40),
             Text("Preis",textAlign: TextAlign.center,style: const TextStyle(fontSize: 30,letterSpacing: 1,shadows:[Shadow(color:Colors.black54, offset:Offset(1,2), blurRadius: 4 ) ]),),
