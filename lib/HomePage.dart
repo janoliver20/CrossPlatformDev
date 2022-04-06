@@ -252,8 +252,13 @@ class _HomePageState extends State<HomePage> {
                             trailing: Wrap(
                               spacing: 12, // space between two icons
                               children: <Widget>[
+                                // Text(
+                                //   store.gasStations[index].prices.isNotEmpty
+                                //       ? '${store.gasStations[index].prices[0].amount.toString()} €'
+                                //       : '-- €'
+                                // ),
                                  Text('${store.gasStations[index].distance?.toStringAsFixed(2) ?? '--'} km'), // Text
-                                    Icon(Icons.star), // icon
+                                 Icon(Icons.star), // icon
                                  ],
                               ),
                             onTap: () {
@@ -329,18 +334,17 @@ void onSelected(BuildContext context, int item) {
       break;
     case 1:
       print('Click name');
-      _foundStations.sort((a, b) => a["name"].compareTo(b["name"]));
-      setState(() {});
+      // _foundStations.sort((a, b) => a["name"].compareTo(b["name"]));
+      // setState(() {});
+      store.sortGasStationsBy(Sort.name);
       break;
     case 2:
       print('Click price');
-      _foundStations.sort((a, b) => a["price"].compareTo(b["price"]));
-      setState(() {});
+      store.sortGasStationsBy(Sort.price);
       break;
     case 3:
       print('Click distance');
-      _foundStations.sort((a, b) => a["distance"].compareTo(b["distance"]));
-      setState(() {});
+      store.sortGasStationsBy(Sort.distance);
 
 
   }

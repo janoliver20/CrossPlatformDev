@@ -15,6 +15,18 @@ mixin _$MainStore on _MainStore, Store {
   int get value => (_$valueComputed ??=
           Computed<int>(() => super.value, name: '_MainStore.value'))
       .value;
+  Computed<bool>? _$isLoadingComputed;
+
+  @override
+  bool get isLoading => (_$isLoadingComputed ??=
+          Computed<bool>(() => super.isLoading, name: '_MainStore.isLoading'))
+      .value;
+  Computed<dynamic>? _$errorComputed;
+
+  @override
+  dynamic get error => (_$errorComputed ??=
+          Computed<dynamic>(() => super.error, name: '_MainStore.error'))
+      .value;
 
   final _$_valueAtom = Atom(name: '_MainStore._value');
 
@@ -31,18 +43,33 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
-  final _$errorAtom = Atom(name: '_MainStore.error');
+  final _$_errorAtom = Atom(name: '_MainStore._error');
 
   @override
-  dynamic get error {
-    _$errorAtom.reportRead();
-    return super.error;
+  dynamic get _error {
+    _$_errorAtom.reportRead();
+    return super._error;
   }
 
   @override
-  set error(dynamic value) {
-    _$errorAtom.reportWrite(value, super.error, () {
-      super.error = value;
+  set _error(dynamic value) {
+    _$_errorAtom.reportWrite(value, super._error, () {
+      super._error = value;
+    });
+  }
+
+  final _$_isLoadingAtom = Atom(name: '_MainStore._isLoading');
+
+  @override
+  bool get _isLoading {
+    _$_isLoadingAtom.reportRead();
+    return super._isLoading;
+  }
+
+  @override
+  set _isLoading(bool value) {
+    _$_isLoadingAtom.reportWrite(value, super._isLoading, () {
+      super._isLoading = value;
     });
   }
 
@@ -95,10 +122,35 @@ mixin _$MainStore on _MainStore, Store {
   }
 
   @override
+  void getGasStationsInRegion(Region region,
+      {FuelType? fuelType, dynamic includeClosed = false}) {
+    final _$actionInfo = _$_MainStoreActionController.startAction(
+        name: '_MainStore.getGasStationsInRegion');
+    try {
+      return super.getGasStationsInRegion(region,
+          fuelType: fuelType, includeClosed: includeClosed);
+    } finally {
+      _$_MainStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void sortGasStationsBy(Sort sort, {FuelType? fuelType, bool asc = true}) {
+    final _$actionInfo = _$_MainStoreActionController.startAction(
+        name: '_MainStore.sortGasStationsBy');
+    try {
+      return super.sortGasStationsBy(sort, fuelType: fuelType, asc: asc);
+    } finally {
+      _$_MainStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
-error: ${error},
-value: ${value}
+value: ${value},
+isLoading: ${isLoading},
+error: ${error}
     ''';
   }
 }

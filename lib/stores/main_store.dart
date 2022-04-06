@@ -9,20 +9,31 @@ import 'package:mobx/mobx.dart';
 
 part 'main_store.g.dart';
 
+enum Sort {
+  name,
+  price,
+  distance
+}
+
 class MainStore = _MainStore with _$MainStore;
 
 abstract class _MainStore with Store {
   final EControlAPI _eControlAPI = EControlAPI();
 
-  MainStore() => reaction((_) => error, (err) {
-    print("Error: " + err.toString());
+  MainStore() => autorun((_) {
+    if (error != null) {
+      print("Error: " + error.toString());
+    }
   });
 
   @observable
   int _value = 0;
 
   @observable
-  dynamic error;
+  dynamic _error;
+
+  @observable
+  bool _isLoading = false;
 
   ObservableList<Region> regions = ObservableList.of([]);
 
@@ -33,6 +44,12 @@ abstract class _MainStore with Store {
   @computed
   int get value => _value;
 
+  @computed
+  bool get isLoading => _isLoading;
+
+  @computed
+  dynamic get error => _error;
+
   @action
   void increment() {
     _value++;
@@ -40,22 +57,32 @@ abstract class _MainStore with Store {
 
   @action
   void getRegions({includeCities = true}) {
-    _eControlAPI.queryRegions(includeCities: includeCities).then((val){
-      regions.clear();
-      regions.addAll(val);
-    });
+    _isLoading = true;
+    _eControlAPI.queryRegions(includeCities: includeCities)
+        .then((val){
+          regions.clear();
+          regions.addAll(val);
+        })
+        .catchError((err) => _error = err)
+        .whenComplete(() => _isLoading = false);
+
   }
 
   @action
   void getRegionUnits() {
-    _eControlAPI.queryRegionUnits().then((value){
-      regionUnits.clear();
-      regionUnits.addAll(value);
-    });
+    _isLoading = true;
+    _eControlAPI.queryRegionUnits()
+        .then((value){
+          regionUnits.clear();
+          regionUnits.addAll(value);
+        })
+        .catchError((err) => _error = err)
+        .whenComplete(() => _isLoading = false);
   }
 
   @action
   void getGasStationsAtCurrentLocation({FuelType? fuelType, includeClosed = false}) {
+    _isLoading = true;
     LocationService
         .determinePosition(desiredAccuracy: LocationAccuracy.high)
         .then((position) => {
@@ -65,9 +92,48 @@ abstract class _MainStore with Store {
                 gasStations.clear();
                 gasStations.addAll(gasStationList);
                   })
-              .catchError((err) => error = err)
+              .catchError((err) => _error = err)
 
     })
-        .catchError((err) => error = err);
+        .catchError((err) => _error = err)
+        .whenComplete(() => _isLoading = false);
+  }
+
+  @action
+  void getGasStationsInRegion(Region region, {FuelType? fuelType, includeClosed = false}) {
+    _isLoading = true;
+    _eControlAPI.queryGasStationsByRegion(code: region.code, regionType: region.regionType)
+        .then((gasStationList) {
+          gasStations.clear();
+          gasStations.addAll(gasStationList);
+    })
+        .catchError((err) => _error = err)
+        .whenComplete(() => _isLoading = false);
+  }
+
+  @action
+  void sortGasStationsBy(Sort sort, {FuelType? fuelType, bool asc = true}) {
+    if (gasStations.isNotEmpty) {
+      gasStations.sort((a, b) {
+        switch (sort) {
+          case Sort.name:
+            return a.name.compareTo(b.name) * (asc ? 1 : -1);
+          case Sort.price:
+            if (fuelType != null) {
+              return a.prices
+                  .firstWhere((element) => element.fuelType == fuelType)
+                  .amount
+                  .compareTo(b.prices
+                  .firstWhere((element) => element.fuelType == fuelType)
+                  .amount) * (asc ? 1 : -1);
+            }
+            return (a.prices.isNotEmpty ? a.prices[0].amount : double.maxFinite)
+                .compareTo(b.prices.isNotEmpty ? b.prices[0].amount : double.maxFinite) * (asc ? 1 : -1);
+          case Sort.distance:
+            return (a.distance ?? double.maxFinite)
+                .compareTo(b.distance ?? double.maxFinite) * (asc ? 1 : -1);
+        }
+      });
+    }
   }
 }
