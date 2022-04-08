@@ -238,33 +238,65 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.all(20.0),
                           child: ListTile(
                             title:  Text(
-                              store.gasStations[index].name,
-                              textScaleFactor: 1.1,
+                              truncate('${store.gasStations[index].name}', length: 20),
+                              textAlign: TextAlign.left,style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'Robot',fontStyle: FontStyle.normal)
                             ),
-                            subtitle: Text(
-                              store.gasStations[index].location.address.toString(),
-                              textScaleFactor: 1,
+                            subtitle: Wrap(
+                                spacing: 12,
+
+                                children: <Widget>[
+                                  Text('${store.gasStations[index].distance?.toStringAsFixed(2) ?? "--"} km'),
+                                  Text('${store.gasStations[index].location.address.toString()}',
+                                textScaleFactor: 1,
                             ),
-                            leading: Text(
+                            ],
+                            ),
+                            /*leading: Wrap(
+                              spacing: 12,
+                              direction: Axis.vertical,
+                              children: <Widget>[
+                               Text(
+                                    store.gasStations[index].prices.isNotEmpty
+                                        ? '${getFuelType(index)} ${store.gasStations[index].prices[0].amount.toString()} €'
+                                        : '-- €'
+
+
+                                ),
+                              Text(
+                                    store.gasStations[index].prices.isNotEmpty
+                                        ? '${getFuelType(index)}${store.gasStations[index].prices[0].amount.toString()} €'
+                                        : '-- €'
+
+
+                                ),
+                              ],
+                            ),*/
+                            /*leading: Text(
                                 store.gasStations[index].prices.isNotEmpty
                                     ? '${store.gasStations[index].prices[0].amount.toString()} €'
                                     : '-- €'
 
 
-                            ),
+                            ),*/
 
 
                             trailing: Wrap(
-                              spacing: 12, // space between two icons
+                              spacing: 12,
+                              direction: Axis.vertical,// space between two icons
                               children: <Widget>[
-                                // Text(
-                                //   store.gasStations[index].prices.isNotEmpty
-                                //       ? '${store.gasStations[index].prices[0].amount.toString()} €'
-                                //       : '-- €'
-                                // ),
-                                 Text('${store.gasStations[index].distance?.toStringAsFixed(2) ?? '--'} km'), // Text
-                                 Icon(Icons.star), // icon
-                                 ],
+
+                                Text(
+                                    store.gasStations[index].prices.isNotEmpty
+                                        ? '${getFuelType(index)}'
+                                        : ''
+                                  ,),
+                                Text(
+                                  store.gasStations[index].prices.isNotEmpty
+                                      ? '${store.gasStations[index].prices[0].amount.toString()} €/l'
+                                      : '-- €/l'
+                                  ,textScaleFactor: 1,),
+
+                              ],
                               ),
                             onTap: () {
                               Navigator.push(
@@ -328,6 +360,27 @@ class _HomePageState extends State<HomePage> {
       ),
     );
 
+    }
+
+  String truncate(String text, { length: 7, omission: '...' }) {
+    if (length >= text.length) {
+      return text;
+    }
+    return text.replaceRange(length, text.length, omission);
+  }
+
+    String getFuelType(int index){
+    String fuelType ="";
+    fuelType = store.gasStations[index].prices[0].fuelType.toString();
+    if(fuelType == "FuelType.die"){
+      fuelType = "Diesel: ";
+    }else  if(fuelType == "FuelType.sup"){
+      fuelType = "Super: ";
+    }
+    else  if(fuelType == "FuelType.gas"){
+      fuelType = "Gas: ";
+    }
+    return fuelType;
     }
 
 void onSelected(BuildContext context, int item) {
