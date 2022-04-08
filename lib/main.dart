@@ -3,7 +3,8 @@ import 'dart:math';
 import 'package:Me_Fuel/HomePage.dart';
 import 'dart:async';
 
-import 'package:Me_Fuel/Screens/DemoScreen.dart';
+import 'package:Me_Fuel/detailPage.dart';
+import 'package:Me_Fuel/screens/UserScreen.dart';
 import 'package:Me_Fuel/services/e-control/e-control_api.dart';
 import 'package:Me_Fuel/screens/MapScreen.dart';
 import 'package:Me_Fuel/stores/main_store.dart';
@@ -102,12 +103,13 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _pages = <Widget>[
 
     new HomePage(),
-    new MapScreen()
+    new MapScreen(),
+    new UserScreen()
 
   ];
 
   static const List<String> _pageTitles = <String>[
-    "Tankstellen", "Map"
+    "Tankstellen", "Map", "User"
   ];
 
   @override
@@ -120,16 +122,12 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
 
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(_pageTitles.elementAt(_selectedIndex)),
-      ),
       body: _pages.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.list), label: "Tankstellen"),
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map")
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
+          BottomNavigationBarItem(icon: new Image.asset("assets/icons/user24.png"), label: "User")
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
