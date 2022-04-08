@@ -17,7 +17,7 @@ class DetailPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Detail Page"),
+        title: Text(name.toString()+ " Detailansicht"),
       ),
       body: Container(
         //height: 100,
@@ -38,13 +38,17 @@ class DetailPage extends StatelessWidget {
             //   fit: BoxFit.cover,),
           //Text(name.toString(),textAlign: TextAlign.center,style: const TextStyle(fontSize: 40,fontWeight: FontWeight.bold,letterSpacing: 5,shadows:[Shadow(color:Colors.black54, offset:Offset(1,2), blurRadius: 4 ) ]),),
             SizedBox(height: 40),
-            Text("Preis",textAlign: TextAlign.center,style: const TextStyle(fontSize: 30,letterSpacing: 1,shadows:[Shadow(color:Colors.black54, offset:Offset(1,2), blurRadius: 4 ) ]),),
+            Text("Tankstelle",textAlign: TextAlign.center,style: const TextStyle(fontSize: 30,letterSpacing: 1,fontWeight: FontWeight.bold,fontFamily: 'Arial',fontStyle: FontStyle.normal),),
             SizedBox(height: 10),
-            Text(price.toString() + " €",textAlign: TextAlign.center,style: const TextStyle(fontSize: 20,letterSpacing: 1,shadows:[Shadow(color:Colors.black54, offset:Offset(1,2), blurRadius: 4 ) ]),),
+            Text(name.toString(),textAlign: TextAlign.center,style: const TextStyle(fontSize: 20,letterSpacing: 1,fontWeight: FontWeight.bold,fontFamily: 'Arial',fontStyle: FontStyle.normal),),
             SizedBox(height: 40),
-            Text("Entfernung",textAlign: TextAlign.center,style: const TextStyle(fontSize: 30,letterSpacing: 1,shadows:[Shadow(color:Colors.black54, offset:Offset(1,2), blurRadius: 4 ) ]),),
+            Text("Preis",textAlign: TextAlign.center,style: const TextStyle(fontSize: 30,letterSpacing: 1,fontWeight: FontWeight.bold,fontFamily: 'Arial',fontStyle: FontStyle.normal),),
             SizedBox(height: 10),
-            Text(distance.toString() + " km",textAlign: TextAlign.center,style: const TextStyle(fontSize: 20,letterSpacing: 1,shadows:[Shadow(color:Colors.black54, offset:Offset(1,2), blurRadius: 4 ) ]),),
+            Text(price.toString() + " €",textAlign: TextAlign.center,style: const TextStyle(fontSize: 20,letterSpacing: 1,fontWeight: FontWeight.bold,fontFamily: 'Arial',fontStyle: FontStyle.normal),),
+            SizedBox(height: 40),
+            Text("Entfernung",textAlign: TextAlign.center,style: const TextStyle(fontSize: 30,letterSpacing: 1,fontWeight: FontWeight.bold,fontFamily: 'Arial',fontStyle: FontStyle.normal),),
+            SizedBox(height: 10),
+            Text(distance.toString() + " km",textAlign: TextAlign.center,style: const TextStyle(fontSize: 20,letterSpacing: 1,fontWeight: FontWeight.bold, fontFamily: 'Arial',fontStyle: FontStyle.normal),),
 
           ],
         )

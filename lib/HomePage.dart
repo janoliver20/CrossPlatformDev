@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   // This holds a list of fiction users
   // You can use data fetched from a database or a server as well
   final List<Map<String, dynamic>> _allStations = [
-    {
+    /*{
       "id": 1,
       "name": "OMV",
       "price": 1.2345,
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
       "price": 1.8421,
       "distance": 0.9,
       "location": "Feld"
-    },
+    },*/
 
   ];
 
@@ -146,8 +146,9 @@ class _HomePageState extends State<HomePage> {
   @override
   initState() {
     // at the beginning, all users are shown
-    _foundStations = _allStations;
     store.getGasStationsAtCurrentLocation();
+    _foundStations = _allStations;
+
     super.initState();
   }
 
@@ -176,16 +177,16 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
 
-        title: const Text('meFuel'),
+        title: const Text('Tankstellen'),
 
         actions: [
 
-          IconButton(
+          /*IconButton(
               onPressed: () =>
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (_) => SearchPage())),
               icon: Icon(Icons.search)),
-
+          */
           PopupMenuButton<int>(icon: Icon(Icons.sort),
               onSelected: (item) => onSelected(context, item),
               itemBuilder: (context) =>
@@ -248,7 +249,11 @@ class _HomePageState extends State<HomePage> {
                                 store.gasStations[index].prices.isNotEmpty
                                     ? '${store.gasStations[index].prices[0].amount.toString()} €'
                                     : '-- €'
+
+
                             ),
+
+
                             trailing: Wrap(
                               spacing: 12, // space between two icons
                               children: <Widget>[
@@ -266,10 +271,9 @@ class _HomePageState extends State<HomePage> {
                                 context,
                                 MaterialPageRoute(builder: (context) {
                                   return DetailPage(
-                                    name: store.gasStations[index].name
-                                        .toString(),
+                                    name: store.gasStations[index].name.toString(),
                                     price: store.gasStations[index].prices.isNotEmpty ? store.gasStations[index].prices[0].amount.toString() : "--",
-                                    distance: store.gasStations[index].distance?.toString() ?? "--",
+                                    distance: store.gasStations[index].distance?.toStringAsFixed(2) ?? "--",
                                   );
                                 })
                               );
