@@ -5,6 +5,7 @@ import 'dart:async';
 
 
 import 'package:Me_Fuel/services/e-control/e-control_api.dart';
+import 'package:Me_Fuel/services/location.service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -14,6 +15,8 @@ import 'package:Me_Fuel/models/GasStation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:ui' as ui;
 import 'dart:typed_data';
+
+import '../detailPage.dart';
 
 
 class MapScreen extends StatefulWidget {
@@ -41,10 +44,10 @@ class MapScreenState extends State<MapScreen> {
   void _onMapCreated(GoogleMapController controller){
     _controller = controller;
 
-    setLocationChangedListener((location) {
+    LocationService.determinePosition().then((l) {
 
-      var longitude = location.longitude;
-      var latitude = location.latitude;
+      var longitude = l.longitude;
+      var latitude = l.latitude;
       if (longitude != null && latitude != null) {
 
         _locationSubscription.pause();
@@ -59,6 +62,12 @@ class MapScreenState extends State<MapScreen> {
           addMarkerToList(value);
         });
       }
+
+    });
+
+    setLocationChangedListener((location) {
+
+
     });
 
 
@@ -73,6 +82,17 @@ class MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Search for location ...'),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              print("Search");
+            },
+            icon: Icon(Icons.search),
+          ),
+        ]
+      ),
       body: GoogleMap(
         mapType: MapType.normal,
         initialCameraPosition: getInitialCameraPosition(),
@@ -106,7 +126,19 @@ class MapScreenState extends State<MapScreen> {
           title: gasStation.name,
           snippet: getMarkerText(gasStation),
           onTap: () {
-            print("To Detail Screen");
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) {
+                  return DetailPage(
+                    name: gasStation.name
+                        .toString(),
+                    price: gasStation.prices.toString(),
+                    distance: gasStation.distance!
+                        .toString(),
+                  );
+                })
+              //MaterialPageRoute(builder: (context) => const DetailPage()),
+            );
           },
         ),
         icon: getBitmapDescriptor(customMarkerImage),
