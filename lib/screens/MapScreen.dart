@@ -6,17 +6,23 @@ import 'dart:async';
 
 import 'package:Me_Fuel/services/e-control/e-control_api.dart';
 import 'package:Me_Fuel/services/location.service.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:Me_Fuel/stores/main_store.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:google_geocoding/google_geocoding.dart';
+import 'package:google_maps_webservice/places.dart' as places;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as mapLocation;
 import 'package:Me_Fuel/models/GasStation.dart';
 
+
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:mobx/mobx.dart';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
 
 import '../detailPage.dart';
+import '../main.dart';
 
 
 class MapScreen extends StatefulWidget {
@@ -39,13 +45,24 @@ class MapScreenState extends State<MapScreen> {
   final EControlAPI _api = EControlAPI();
   List<GasStation> _listGasStations = List.empty();
   Map<MarkerId, Marker> _markersMap = {};
-  Set<Marker> _markers = {};
+  final key = "AIzaSyBGmu809RbXJiJ6sLz8wxlj_BLmY7Re8bI";
+  late places.GoogleMapsPlaces _places;
+  late GoogleGeocoding _geocoding;
+
+  final store = getIt<MainStore>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _places = places.GoogleMapsPlaces(apiKey: key);
+    _geocoding = GoogleGeocoding(key);
+  }
 
   void _onMapCreated(GoogleMapController controller){
     _controller = controller;
 
     LocationService.determinePosition().then((l) {
-
       var longitude = l.longitude;
       var latitude = l.latitude;
       if (longitude != null && latitude != null) {
@@ -58,14 +75,17 @@ class MapScreenState extends State<MapScreen> {
             )
         );
 
-        queryGasStationsForMap(latitude, longitude).then((value) {
+        store.getGasStationsAtCurrentLocation();
+        /*queryGasStationsForMap(latitude, longitude).then((value) {
           addMarkerToList(value);
-        });
-      }
+        });*/
 
+        store.gasStations.isNotEmpty ? addMarkerToList(store.gasStations) : print("No gasstations found");
+      }
     });
 
-    setLocationChangedListener((location) {
+    setLocationChangedListener((l) {
+
 
 
     });
@@ -87,7 +107,11 @@ class MapScreenState extends State<MapScreen> {
         actions: [
           IconButton(
             onPressed: () async {
-              print("Search");
+             places.Prediction? p = await PlacesAutocomplete.show(context: context, apiKey: key,
+                 types: ["(cities)"], components: [places.Component(places.Component.country, "aut")], strictbounds: false);
+
+             displayPrediction(p);
+
             },
             icon: Icon(Icons.search),
           ),
@@ -101,6 +125,28 @@ class MapScreenState extends State<MapScreen> {
         myLocationEnabled: true,
       ),
     );
+  }
+
+  Future<Null> displayPrediction(places.Prediction? prediction) async {
+    String? placeId = prediction?.placeId;
+    if (prediction != null && placeId != null) {
+      var detail = await _places.getDetailsByPlaceId(placeId);
+      var lat = detail.result.geometry?.location.lat;
+      var long = detail.result.geometry?.location.lng;
+
+      var address = await _geocoding.geocoding.getReverse(LatLon(lat!, long!));
+
+      _controller.animateCamera(
+        CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(lat, long), zoom: 14))
+      );
+
+      queryGasStationsForMap(lat, long).then((stations) {
+        addMarkerToList(stations);
+      });
+
+      print(lat);
+      print(long);
+    }
   }
 
   void addMarkerToList(List<GasStation> gasStations) {
