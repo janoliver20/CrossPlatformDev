@@ -3,6 +3,7 @@ import 'package:Me_Fuel/models/GasStation.dart';
 import 'package:Me_Fuel/models/Region.dart';
 import 'package:Me_Fuel/models/RegionUnit.dart';
 import 'package:Me_Fuel/services/e-control/e-control_api.dart';
+import 'package:Me_Fuel/services/e-control/gasstation_fuel_merge.service.dart';
 import 'package:Me_Fuel/services/location.service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mobx/mobx.dart';
@@ -13,6 +14,11 @@ enum Sort {
   name,
   price,
   distance
+}
+
+enum GasStationListOperationOption {
+  append,
+  replace
 }
 
 class MainStore = _MainStore with _$MainStore;
@@ -100,15 +106,21 @@ abstract class _MainStore with Store {
   }
 
   @action
-  void getGasStationsInRegion(Region region, {FuelType? fuelType, includeClosed = false}) {
+  void getGasStationsInRegion(Region region, {FuelType? fuelType, includeClosed = false, listOption = GasStationListOperationOption.replace}) {
     _isLoading = true;
     _eControlAPI.queryGasStationsByRegion(code: region.code, regionType: region.regionType)
-        .then((gasStationList) {
-          gasStations.clear();
-          gasStations.addAll(gasStationList);
-    })
+        .then((gasStationList) => _addToGasStationList(gasStationList, listOption))
         .catchError((err) => _error = err)
         .whenComplete(() => _isLoading = false);
+  }
+
+  @action
+  void getGasStationAtLocation(double latitude, double longitude, {FuelType? fuelType, includeClosed = false, listOption = GasStationListOperationOption.replace}){
+    _isLoading = true;
+    _eControlAPI.queryGasStationsByAddress(latitude: latitude, longitude: longitude, includeClosed: includeClosed, fuelType: fuelType)
+    .then((gasStationList) => _addToGasStationList(gasStationList, listOption))
+    .catchError((err) => _error = err)
+    .whenComplete(() => _isLoading = false);
   }
 
   @action
@@ -134,6 +146,18 @@ abstract class _MainStore with Store {
                 .compareTo(b.distance ?? double.maxFinite) * (asc ? 1 : -1);
         }
       });
+    }
+  }
+
+  @action
+  void _addToGasStationList(List<GasStation> elements, GasStationListOperationOption option) {
+    switch(option) {
+      case GasStationListOperationOption.replace:
+        gasStations.clear();
+        gasStations.addAll(elements);
+        break;
+      case GasStationListOperationOption.append:
+        gasStations = ObservableList.of(GasStationFuelMerge.mergeGasStations([gasStations, elements]));
     }
   }
 }
