@@ -14,7 +14,7 @@ class GasStationFuelMerge extends GasStationService {
         .getByAddress(latitude: latitude, longitude: longitude, fuelType: fuelType, includeClosed: includeClosed));
     return Future.wait(multipleFutures)
         .then((lists) {
-          return _mergeGasStations(lists);
+          return GasStationFuelMerge.mergeGasStations(lists);
         });
   }
 
@@ -24,11 +24,11 @@ class GasStationFuelMerge extends GasStationService {
         .getByRegion(code: code, regionType: regionType, fuelType: fuelType, includeClosed: includeClosed));
     return Future.wait(multipleFutures)
         .then((lists) {
-      return _mergeGasStations(lists);
+      return GasStationFuelMerge.mergeGasStations(lists);
     });
   }
 
-  List<GasStation> _mergeGasStations(List<List<GasStation>> lists) {
+  static List<GasStation> mergeGasStations(List<List<GasStation>> lists) {
     if (lists.isNotEmpty) {
       return lists.reduce((old, stations) {
         for (var gasStation in stations) {

@@ -123,12 +123,33 @@ mixin _$MainStore on _MainStore, Store {
 
   @override
   void getGasStationsInRegion(Region region,
-      {FuelType? fuelType, dynamic includeClosed = false}) {
+      {FuelType? fuelType,
+      dynamic includeClosed = false,
+      dynamic listOption = GasStationListOperationOption.replace}) {
     final _$actionInfo = _$_MainStoreActionController.startAction(
         name: '_MainStore.getGasStationsInRegion');
     try {
       return super.getGasStationsInRegion(region,
-          fuelType: fuelType, includeClosed: includeClosed);
+          fuelType: fuelType,
+          includeClosed: includeClosed,
+          listOption: listOption);
+    } finally {
+      _$_MainStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void getGasStationAtLocation(double latitude, double longitude,
+      {FuelType? fuelType,
+      dynamic includeClosed = false,
+      dynamic listOption = GasStationListOperationOption.replace}) {
+    final _$actionInfo = _$_MainStoreActionController.startAction(
+        name: '_MainStore.getGasStationAtLocation');
+    try {
+      return super.getGasStationAtLocation(latitude, longitude,
+          fuelType: fuelType,
+          includeClosed: includeClosed,
+          listOption: listOption);
     } finally {
       _$_MainStoreActionController.endAction(_$actionInfo);
     }
@@ -140,6 +161,18 @@ mixin _$MainStore on _MainStore, Store {
         name: '_MainStore.sortGasStationsBy');
     try {
       return super.sortGasStationsBy(sort, fuelType: fuelType, asc: asc);
+    } finally {
+      _$_MainStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void _addToGasStationList(
+      List<GasStation> elements, GasStationListOperationOption option) {
+    final _$actionInfo = _$_MainStoreActionController.startAction(
+        name: '_MainStore._addToGasStationList');
+    try {
+      return super._addToGasStationList(elements, option);
     } finally {
       _$_MainStoreActionController.endAction(_$actionInfo);
     }
