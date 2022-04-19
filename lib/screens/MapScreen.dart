@@ -9,6 +9,7 @@ import 'package:Me_Fuel/services/location.service.dart';
 import 'package:Me_Fuel/stores/main_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_geocoding/google_geocoding.dart';
 import 'package:google_maps_webservice/places.dart' as places;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -49,6 +50,8 @@ class MapScreenState extends State<MapScreen> {
   late places.GoogleMapsPlaces _places;
   late GoogleGeocoding _geocoding;
 
+
+
   final store = getIt<MainStore>();
 
   @override
@@ -67,35 +70,26 @@ class MapScreenState extends State<MapScreen> {
       var latitude = l.latitude;
       if (longitude != null && latitude != null) {
 
-        _locationSubscription.pause();
-
         _controller.animateCamera(
             CameraUpdate.newCameraPosition(
-                CameraPosition(target: LatLng(latitude, longitude), zoom: 14)
+                CameraPosition(target: LatLng(latitude, longitude), zoom: 12.5)
             )
         );
 
         store.getGasStationsAtCurrentLocation();
-        /*queryGasStationsForMap(latitude, longitude).then((value) {
-          addMarkerToList(value);
-        });*/
-
-        store.gasStations.isNotEmpty ? addMarkerToList(store.gasStations) : print("No gasstations found");
       }
     });
-
-    setLocationChangedListener((l) {
-
-
-
-    });
-
-
-    //_locationSubscription = _location.onLocationChanged.listen();
-
   }
 
+void _onCameraMove(CameraPosition position) {
 
+    var cameraPosition = position.target;
+    print(position.zoom);
+    if (position.zoom >= 10){
+      store.getGasStationAtLocation(cameraPosition.latitude, cameraPosition.longitude);
+    }
+
+}
 
 
   
@@ -117,13 +111,17 @@ class MapScreenState extends State<MapScreen> {
           ),
         ]
       ),
-      body: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: getInitialCameraPosition(),
-        markers: Set.of(_markersMap.values),
-        onMapCreated: _onMapCreated,
-        myLocationEnabled: true,
-      ),
+      body: Observer(builder: (_) {
+        store.gasStations.isNotEmpty ? addMarkerToList(store.gasStations) : print("No gasstations found");
+        return GoogleMap(
+          mapType: MapType.normal,
+          initialCameraPosition: getInitialCameraPosition(),
+          markers: Set.of(_markersMap.values),
+          onMapCreated: _onMapCreated,
+          myLocationEnabled: true,
+          onCameraMove: _onCameraMove,
+        );
+      }),
     );
   }
 
@@ -140,9 +138,14 @@ class MapScreenState extends State<MapScreen> {
         CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(lat, long), zoom: 14))
       );
 
-      queryGasStationsForMap(lat, long).then((stations) {
+      store.getGasStationAtLocation(lat, long, listOption: GasStationListOperationOption.append);
+
+      //store.gasStations.isNotEmpty ? addMarkerToList(store.gasStations) : print("No gasstations found");
+
+
+      /*queryGasStationsForMap(lat, long).then((stations) {
         addMarkerToList(stations);
-      });
+      });*/
 
       print(lat);
       print(long);
@@ -164,6 +167,10 @@ class MapScreenState extends State<MapScreen> {
   }
 
   void createMarker(MarkerId markerId, GasStation gasStation, Uint8List? customMarkerImage) {
+
+    if (_markersMap.containsKey(markerId)) {
+      return;
+    }
 
     final marker = Marker(
         markerId: markerId,
@@ -192,6 +199,7 @@ class MapScreenState extends State<MapScreen> {
     );
 
     print("Added marker");
+    print("Markers ${_markersMap.length}");
     setState(() {
       _markersMap[markerId] = marker;
     });
