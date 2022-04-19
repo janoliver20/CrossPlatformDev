@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   // This holds a list of fiction users
   // You can use data fetched from a database or a server as well
   final List<Map<String, dynamic>> _allStations = [
-    {
+    /*{
       "id": 1,
       "name": "OMV",
       "price": 1.2345,
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
       "price": 1.8421,
       "distance": 0.9,
       "location": "Feld"
-    },
+    },*/
 
   ];
 
@@ -146,8 +146,9 @@ class _HomePageState extends State<HomePage> {
   @override
   initState() {
     // at the beginning, all users are shown
-    _foundStations = _allStations;
     store.getGasStationsAtCurrentLocation();
+    _foundStations = _allStations;
+
     super.initState();
   }
 
@@ -176,16 +177,16 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
 
-        title: const Text('meFuel'),
+        title: const Text('Tankstellen'),
 
         actions: [
 
-          IconButton(
+          /*IconButton(
               onPressed: () =>
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (_) => SearchPage())),
               icon: Icon(Icons.search)),
-
+          */
           PopupMenuButton<int>(icon: Icon(Icons.sort),
               onSelected: (item) => onSelected(context, item),
               itemBuilder: (context) =>
@@ -237,40 +238,84 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.all(20.0),
                           child: ListTile(
                             title:  Text(
-                              store.gasStations[index].name,
-                              textScaleFactor: 1.1,
+                              truncate('${store.gasStations[index].name}', length: 20),
+                              textAlign: TextAlign.left,style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'Robot',fontStyle: FontStyle.normal)
                             ),
-                            subtitle: Text(
-                              store.gasStations[index].location.address.toString(),
-                              textScaleFactor: 1,
+                            subtitle: Wrap(
+                                spacing: 12,
+
+                                children: <Widget>[
+                                  Text('${store.gasStations[index].distance?.toStringAsFixed(2) ?? "--"} km'),
+                                  Text('${store.gasStations[index].location.address.toString()}',
+                                textScaleFactor: 1,
                             ),
-                            leading: Text(
+                            ],
+                            ),
+                            /*leading: Wrap(
+                              spacing: 12,
+                              direction: Axis.vertical,
+                              children: <Widget>[
+                               Text(
+                                    store.gasStations[index].prices.isNotEmpty
+                                        ? '${getFuelType(index)} ${store.gasStations[index].prices[0].amount.toString()} €'
+                                        : '-- €'
+
+
+                                ),
+                              Text(
+                                    store.gasStations[index].prices.isNotEmpty
+                                        ? '${getFuelType(index)}${store.gasStations[index].prices[0].amount.toString()} €'
+                                        : '-- €'
+
+
+                                ),
+                              ],
+                            ),*/
+                            /*leading: Text(
                                 store.gasStations[index].prices.isNotEmpty
                                     ? '${store.gasStations[index].prices[0].amount.toString()} €'
                                     : '-- €'
-                            ),
+
+
+                            ),*/
+
+
                             trailing: Wrap(
-                              spacing: 12, // space between two icons
+                              spacing: 12,
+                              direction: Axis.vertical,// space between two icons
                               children: <Widget>[
-                                // Text(
-                                //   store.gasStations[index].prices.isNotEmpty
-                                //       ? '${store.gasStations[index].prices[0].amount.toString()} €'
-                                //       : '-- €'
-                                // ),
-                                 Text('${store.gasStations[index].distance?.toStringAsFixed(2) ?? '--'} km'), // Text
-                                 Icon(Icons.star), // icon
-                                 ],
+
+                                Text(
+                                    store.gasStations[index].prices.isNotEmpty
+                                        ? '${getFuelType(index)}'
+                                        : ''
+                                  ,),
+                                Text(
+                                  store.gasStations[index].prices.isNotEmpty
+                                      ? '${store.gasStations[index].prices[0].amount.toString()} €/l'
+                                      : '-- €/l'
+                                  ,textScaleFactor: 1,),
+
+                              ],
                               ),
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) {
                                   return DetailPage(
-                                    name: store.gasStations[index].name
-                                        .toString(),
+                                    name: store.gasStations[index].name.toString(),
                                     price: store.gasStations[index].prices.isNotEmpty ? store.gasStations[index].prices[0].amount.toString() : "--",
-                                    distance: store.gasStations[index].distance?.toString() ?? "--",
-                                  );
+                                    distance: store.gasStations[index].distance?.toStringAsFixed(2) ?? "--",
+                                    address: store.gasStations[index].location.address.toString(),
+                                    fuelName: getFuelType(index),
+                                    long: store.gasStations[index].location.longitude,
+                                    lat: store.gasStations[index].location.latitude,
+                                    dayOpen: store.gasStations[index].openingHours,
+                                    payment: store.gasStations[index].paymentMethods,
+                                    contact: store.gasStations[index].contact,
+                                    postalcode: store.gasStations[index].location.postalCode.toString(),
+                                    city: store.gasStations[index].location.city.toString(),
+                                    );
                                 })
                               );
                             },
@@ -325,6 +370,30 @@ class _HomePageState extends State<HomePage> {
     );
 
     }
+
+  String truncate(String text, { length: 7, omission: '...' }) {
+    if (length >= text.length) {
+      return text;
+    }
+    return text.replaceRange(length, text.length, omission);
+  }
+
+    String getFuelType(int index){
+    String fuelType ="";
+    fuelType = store.gasStations[index].prices[0].fuelType.toString();
+    if(fuelType == "FuelType.die"){
+      fuelType = "Diesel: ";
+    }else  if(fuelType == "FuelType.sup"){
+      fuelType = "Super: ";
+    }
+    else  if(fuelType == "FuelType.gas"){
+      fuelType = "Gas: ";
+    }
+    return fuelType;
+    }
+
+
+
 
 void onSelected(BuildContext context, int item) {
   switch (item) {
