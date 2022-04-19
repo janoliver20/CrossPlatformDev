@@ -5,7 +5,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 // final getIt = GetIt.instance;
-final store = getIt<MainStore>();
 
 class DemoScreen extends StatefulWidget {
 
@@ -37,17 +36,6 @@ class _DemoScreenState extends State<DemoScreen> {
 
   }
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      store.increment();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
 
@@ -69,15 +57,15 @@ class _DemoScreenState extends State<DemoScreen> {
             const Text(
               'You have pushed the button this many times on Screen:',
             ),
-            Observer(builder: (_) => Text(
-              '${store.regions.length}',
+            Text(
+              '0',
               style: Theme.of(context).textTheme.headline4,
-            ))
+            )
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: (){},
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),

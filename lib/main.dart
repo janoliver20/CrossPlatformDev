@@ -15,7 +15,6 @@ import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
 final getIt = GetIt.asNewInstance();
-final store = getIt<MainStore>();
 
 Future<void> main() async {
   await dotenv.load();
@@ -81,6 +80,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
+  final store = getIt<MainStore>();
 
   @override
   void initState() {
@@ -91,9 +91,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _onItemTapped(int index) {
-    if (index == 0) {
-      store.increment();
-    }
     setState(() {
       _selectedIndex = index;
     });
@@ -120,6 +117,11 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
 
     return Scaffold(
+     /* appBar: AppBar(
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text(_pageTitles.elementAt(_selectedIndex)),
+      ),*/
       body: _pages.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[

@@ -9,12 +9,6 @@ part of 'main_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$MainStore on _MainStore, Store {
-  Computed<int>? _$valueComputed;
-
-  @override
-  int get value => (_$valueComputed ??=
-          Computed<int>(() => super.value, name: '_MainStore.value'))
-      .value;
   Computed<bool>? _$isLoadingComputed;
 
   @override
@@ -58,6 +52,21 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
+  final _$standardFuelTypeAtom = Atom(name: '_MainStore.standardFuelType');
+
+  @override
+  FuelType get standardFuelType {
+    _$standardFuelTypeAtom.reportRead();
+    return super.standardFuelType;
+  }
+
+  @override
+  set standardFuelType(FuelType value) {
+    _$standardFuelTypeAtom.reportWrite(value, super.standardFuelType, () {
+      super.standardFuelType = value;
+    });
+  }
+
   final _$_isLoadingAtom = Atom(name: '_MainStore._isLoading');
 
   @override
@@ -76,11 +85,11 @@ mixin _$MainStore on _MainStore, Store {
   final _$_MainStoreActionController = ActionController(name: '_MainStore');
 
   @override
-  void increment() {
-    final _$actionInfo =
-        _$_MainStoreActionController.startAction(name: '_MainStore.increment');
+  void setDefaultFuelType(FuelType fuelType) {
+    final _$actionInfo = _$_MainStoreActionController.startAction(
+        name: '_MainStore.setDefaultFuelType');
     try {
-      return super.increment();
+      return super.setDefaultFuelType(fuelType);
     } finally {
       _$_MainStoreActionController.endAction(_$actionInfo);
     }
@@ -181,7 +190,7 @@ mixin _$MainStore on _MainStore, Store {
   @override
   String toString() {
     return '''
-value: ${value},
+standardFuelType: ${standardFuelType},
 isLoading: ${isLoading},
 error: ${error}
     ''';

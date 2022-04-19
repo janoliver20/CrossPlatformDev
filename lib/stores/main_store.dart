@@ -8,6 +8,7 @@ import 'package:Me_Fuel/services/location.service.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mobx/mobx.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'main_store.g.dart';
 
@@ -32,6 +33,8 @@ abstract class _MainStore with Store {
     if (error != null) {
       print("Error: " + error.toString());
     }
+    SharedPreferences.getInstance()
+      .then((value) => standardFuelType = FuelType.values[value.getInt("fuelType") ?? 0]);
   });
 
   Sort _sortOption = Sort.non;
@@ -45,6 +48,9 @@ abstract class _MainStore with Store {
   dynamic _error;
 
   @observable
+  FuelType standardFuelType = FuelType.die;
+
+  @observable
   bool _isLoading = false;
 
   ObservableList<Region> regions = ObservableList.of([]);
@@ -53,8 +59,6 @@ abstract class _MainStore with Store {
 
   ObservableList<GasStation> gasStations = ObservableList.of([]);
 
-  @computed
-  int get value => _value;
 
   @computed
   bool get isLoading => _isLoading;
@@ -63,8 +67,11 @@ abstract class _MainStore with Store {
   dynamic get error => _error;
 
   @action
-  void increment() {
-    _value++;
+  void setDefaultFuelType(FuelType fuelType) {
+    if (standardFuelType != fuelType) {
+      standardFuelType = fuelType;
+      SharedPreferences.getInstance().then((value) => value.setInt('fuelType', fuelType.index));
+    }
   }
 
   @action
