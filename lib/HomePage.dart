@@ -306,6 +306,8 @@ class _HomePageState extends State<HomePage> {
                                     name: store.gasStations[index].name.toString(),
                                     price: store.gasStations[index].prices.isNotEmpty ? store.gasStations[index].prices[0].amount.toString() : "--",
                                     distance: store.gasStations[index].distance?.toStringAsFixed(2) ?? "--",
+                                    address: store.gasStations[index].location.address.toString(),
+                                    fuelName: getFuelType(index),
                                   );
                                 })
                               );
