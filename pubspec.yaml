@@ -32,6 +32,7 @@ dependencies:
   mobx: ^2.0.6+1
   flutter_mobx: ^2.0.4
   geolocator: ^8.2.0
+  url_launcher: ^6.0.20
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -56,6 +57,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

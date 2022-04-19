@@ -308,7 +308,14 @@ class _HomePageState extends State<HomePage> {
                                     distance: store.gasStations[index].distance?.toStringAsFixed(2) ?? "--",
                                     address: store.gasStations[index].location.address.toString(),
                                     fuelName: getFuelType(index),
-                                  );
+                                    long: store.gasStations[index].location.longitude,
+                                    lat: store.gasStations[index].location.latitude,
+                                    dayOpen: store.gasStations[index].openingHours,
+                                    payment: store.gasStations[index].paymentMethods,
+                                    contact: store.gasStations[index].contact,
+                                    postalcode: store.gasStations[index].location.postalCode.toString(),
+                                    city: store.gasStations[index].location.city.toString(),
+                                    );
                                 })
                               );
                             },
@@ -384,6 +391,9 @@ class _HomePageState extends State<HomePage> {
     }
     return fuelType;
     }
+
+
+
 
 void onSelected(BuildContext context, int item) {
   switch (item) {
