@@ -5,6 +5,7 @@ import 'package:Me_Fuel/models/RegionUnit.dart';
 import 'package:Me_Fuel/services/e-control/e-control_api.dart';
 import 'package:Me_Fuel/services/e-control/gasstation_fuel_merge.service.dart';
 import 'package:Me_Fuel/services/location.service.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mobx/mobx.dart';
 
@@ -13,7 +14,8 @@ part 'main_store.g.dart';
 enum Sort {
   name,
   price,
-  distance
+  distance,
+  non
 }
 
 enum GasStationListOperationOption {
@@ -31,6 +33,10 @@ abstract class _MainStore with Store {
       print("Error: " + error.toString());
     }
   });
+
+  Sort _sortOption = Sort.non;
+  FuelType? _sortFuelType;
+  bool _sortAsc = true;
 
   @observable
   int _value = 0;
@@ -126,6 +132,9 @@ abstract class _MainStore with Store {
   @action
   void sortGasStationsBy(Sort sort, {FuelType? fuelType, bool asc = true}) {
     if (gasStations.isNotEmpty) {
+      _sortOption = sort;
+      _sortFuelType = fuelType;
+      _sortAsc = asc;
       gasStations.sort((a, b) {
         switch (sort) {
           case Sort.name:
@@ -144,6 +153,8 @@ abstract class _MainStore with Store {
           case Sort.distance:
             return (a.distance ?? double.maxFinite)
                 .compareTo(b.distance ?? double.maxFinite) * (asc ? 1 : -1);
+          case Sort.non:
+            return 0;
         }
       });
     }
@@ -158,6 +169,9 @@ abstract class _MainStore with Store {
         break;
       case GasStationListOperationOption.append:
         gasStations = ObservableList.of(GasStationFuelMerge.mergeGasStations([gasStations, elements]));
+    }
+    if (_sortOption != Sort.non) {
+      sortGasStationsBy(_sortOption, fuelType: _sortFuelType, asc: _sortAsc);
     }
   }
 }
