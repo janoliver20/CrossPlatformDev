@@ -16,6 +16,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as mapLocation;
 import 'package:Me_Fuel/models/GasStation.dart';
 
+import 'package:permission_handler/permission_handler.dart' as pm;
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:mobx/mobx.dart';
@@ -78,6 +79,18 @@ class MapScreenState extends State<MapScreen> {
 
         store.getGasStationsAtCurrentLocation();
       }
+    }).onError((error, stackTrace) {
+      showDialog(context: context, builder: (context) => AlertDialog(
+        title: Text("User Location required to display nearby gas stations"),
+        content: Text("Click on button below to open app settings and enable location during use of app.\n"
+            "Afterwards please restart app."),
+        actions: [
+          TextButton(onPressed: () {
+            pm.openAppSettings();
+          }, child: Text("Open App Settings"))
+        ],
+      ),
+      barrierDismissible: false);
     });
   }
 
