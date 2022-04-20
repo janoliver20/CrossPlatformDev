@@ -20,6 +20,7 @@ import 'package:permission_handler/permission_handler.dart' as pm;
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:mobx/mobx.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
 
@@ -53,7 +54,7 @@ class MapScreenState extends State<MapScreen> {
   bool _navigationButtonEnabled = false;
 
 
-
+  GasStation? _selectedGasStation;
   final store = getIt<MainStore>();
 
   @override
@@ -136,22 +137,41 @@ void _onCameraMove(CameraPosition position) {
               onMapCreated: _onMapCreated,
               myLocationEnabled: true,
               onCameraMove: _onCameraMove,
+              onTap: (_) {
+                setState(() {
+                  _selectedGasStation = null;
+                  _navigationButtonEnabled = false;
+                });
+              },
             ),
             Align(
-              alignment: Alignment.topRight,
+              alignment: Alignment.bottomRight,
               child: Visibility(
-                visible: _navigationButtonEnabled,
-                child: FloatingActionButton(
-                  onPressed: _navigationButtonEnabled ? () {
-                  print("Navigate to");
-                  } : null,
-                  child: Icon(Icons.navigation),
-              ),
+                    visible: _navigationButtonEnabled,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 80, right: 10),
+                      child: FloatingActionButton(
+                        onPressed: _navigationButtonEnabled ? () {
+                          openMap(_selectedGasStation!.location.latitude, _selectedGasStation!.location.longitude);
+                        } : null,
+                        child: Icon(Icons.navigation),
+                      ),
+                    )
+                )
             )
           ],
         );
       }),
     );
+  }
+
+  Future<void> openMap(double latitude, double longitude) async {
+    String googleUrl = 'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude&travelmode=driving';
+    if (await canLaunch(googleUrl)) {
+      await launch(googleUrl);
+    } else {
+      throw 'Could not open the map.';
+    }
   }
 
   Future<Null> displayPrediction(places.Prediction? prediction) async {
@@ -224,6 +244,12 @@ void _onCameraMove(CameraPosition position) {
           },
         ),
         icon: getBitmapDescriptor(customMarkerImage),
+      onTap: () {
+          setState(() {
+            _selectedGasStation = gasStation;
+            _navigationButtonEnabled = true;
+          });
+      },
 
     );
 
