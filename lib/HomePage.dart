@@ -86,12 +86,9 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(8),
         child: Column(
           children: [
-            const SizedBox(
-              height: 20,
-            ),
             TextField(
               onChanged: (value) => _runFilter(value),
               decoration: const InputDecoration(
@@ -99,8 +96,9 @@ class _HomePageState extends State<HomePage> {
             ),
 
             const SizedBox(
-              height: 20,
+              height: 8,
             ),
+
             Expanded(
               child: Observer(builder: (_) {
                 return store.gasStations.isNotEmpty ?
@@ -109,43 +107,48 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (context, index) =>
                       Card(
                         key: ValueKey(store.gasStations[index].id),
-                        color: Colors.black12,
+                        color: const Color.fromRGBO(181, 223, 253, 1.0),
                         elevation: 4,
                         child: Padding(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: const EdgeInsets.all(0.0),
                           child: ListTile(
                             title:  Text(
-                              truncate('${store.gasStations[index].name}', length: 20),
-                              textAlign: TextAlign.left,style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'Robot',fontStyle: FontStyle.normal)
+                                truncate('${store.gasStations[index].name}', length: 16),
+                                textAlign: TextAlign.left,
+                                style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'Robot',fontStyle: FontStyle.normal)
                             ),
                             subtitle: Wrap(
-                                spacing: 12,
-                                children: <Widget>[
-                                  Text('${store.gasStations[index].distance?.toStringAsFixed(2) ?? "--"} km'),
-                                  Text('${store.gasStations[index].location.address.toString()}',
-                                textScaleFactor: 1,
-                            ),
-                            ],
-                            ),
-
-                            trailing: Wrap(
-                              spacing: 12,
-                              direction: Axis.vertical,// space between two icons
+                              spacing: 8,
                               children: <Widget>[
-
+                                Text('${store.gasStations[index].distance?.toStringAsFixed(2) ?? "--"} km'),
+                                Text(
+                                  truncate('${store.gasStations[index].location.city.toString()}', length: 26),
+                                  textScaleFactor: 1,
+                                ),
+                              ],
+                            ),
+                            trailing: Wrap(
+                              spacing: 0,
+                              direction: Axis.horizontal,
+                              children: <Widget>[
+                                // Text(
+                                //     store.gasStations[index].prices.isNotEmpty
+                                //         ? '${getFuelType(index)}'
+                                //         : ''
+                                //   ),
                                 Text(
                                     store.gasStations[index].prices.isNotEmpty
-                                        ? '${getFuelType(index)}'
-                                        : ''
-                                  ,),
-                                Text(
-                                  store.gasStations[index].prices.isNotEmpty
-                                      ? '${store.gasStations[index].prices[0].amount.toString()} €/l'
-                                      : '-- €/l'
-                                  ,textScaleFactor: 1,),
-
+                                      ? '${store.gasStations[index].prices[0].amount.toString()}'
+                                      : '--',
+                                    textScaleFactor: 1,
+                                    style: const TextStyle(fontSize: 42,fontWeight: FontWeight.normal,fontFamily: 'Robot',fontStyle: FontStyle.normal)
+                                  ),
+                                const Text(
+                                  '€/l',
+                                  textScaleFactor: 1,
+                                ),
                               ],
-                              ),
+                            ),
                             onTap: () {
                               Navigator.push(
                                 context,
