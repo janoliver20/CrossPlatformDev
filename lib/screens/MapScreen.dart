@@ -50,6 +50,7 @@ class MapScreenState extends State<MapScreen> {
   final key = "AIzaSyBGmu809RbXJiJ6sLz8wxlj_BLmY7Re8bI";
   late places.GoogleMapsPlaces _places;
   late GoogleGeocoding _geocoding;
+  bool _navigationButtonEnabled = false;
 
 
 
@@ -126,13 +127,28 @@ void _onCameraMove(CameraPosition position) {
       ),
       body: Observer(builder: (_) {
         store.gasStations.isNotEmpty ? addMarkerToList(store.gasStations) : print("No gasstations found");
-        return GoogleMap(
-          mapType: MapType.normal,
-          initialCameraPosition: getInitialCameraPosition(),
-          markers: Set.of(_markersMap.values),
-          onMapCreated: _onMapCreated,
-          myLocationEnabled: true,
-          onCameraMove: _onCameraMove,
+        return Stack(
+          children: <Widget>[
+            GoogleMap(
+            mapType: MapType.normal,
+              initialCameraPosition: getInitialCameraPosition(),
+              markers: Set.of(_markersMap.values),
+              onMapCreated: _onMapCreated,
+              myLocationEnabled: true,
+              onCameraMove: _onCameraMove,
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Visibility(
+                visible: _navigationButtonEnabled,
+                child: FloatingActionButton(
+                  onPressed: _navigationButtonEnabled ? () {
+                  print("Navigate to");
+                  } : null,
+                  child: Icon(Icons.navigation),
+              ),
+            )
+          ],
         );
       }),
     );
