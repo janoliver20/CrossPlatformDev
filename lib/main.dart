@@ -4,6 +4,7 @@ import 'package:Me_Fuel/HomePage.dart';
 import 'dart:async';
 
 import 'package:Me_Fuel/Screens/DemoScreen.dart';
+import 'package:Me_Fuel/screens/IntroScreen.dart';
 import 'package:Me_Fuel/services/e-control/e-control_api.dart';
 import 'package:Me_Fuel/screens/MapScreen.dart';
 import 'package:Me_Fuel/stores/main_store.dart';
@@ -13,30 +14,21 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.asNewInstance();
 
 Future<void> main() async {
   await dotenv.load();
   getIt.registerLazySingleton(() => MainStore());
+  final store = getIt<MainStore>();
 
-  var econtrol = EControlAPI();
-  // econtrol.queryRegionUnits().then((value) {
-  //   inspect(value);
-  // });
-  // econtrol.queryRegions().then((value) {
-  //   inspect(value);
-  // });
-  // econtrol.queryGasStationsByRegion(code: 1, regionType: RegionType.bl, includeClosed: false).then((value) {
-  //   inspect(value);
-  // });
-
-  runApp(const MyApp());
-
+  runApp(MyApp(hasAlreadyReadIntro: store.hasAlreadyReadIntro));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final bool hasAlreadyReadIntro;
+  const MyApp({Key? key, required this.hasAlreadyReadIntro}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -55,7 +47,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'MeFuel Homepage'),
+      home: hasAlreadyReadIntro ? const MyHomePage(title: 'MeFuel Homepage') : const IntroScreen(),
     );
   }
 }

@@ -34,21 +34,28 @@ abstract class _MainStore with Store {
       print("Error: " + error.toString());
     }
     SharedPreferences.getInstance()
-      .then((value) => standardFuelType = FuelType.values[value.getInt("fuelType") ?? 0]);
+      .then((value) => _hasAlreadyReadIntro = value.getBool('firstTime') ?? false);
+    SharedPreferences.getInstance()
+      .then((value) => _standardFuelType = FuelType.values[value.getInt("fuelType") ?? 0]);
   });
 
-  Sort _sortOption = Sort.non;
-  FuelType? _sortFuelType;
-  bool _sortAsc = true;
+  @observable
+  bool _hasAlreadyReadIntro = false;
 
   @observable
-  int _value = 0;
+  Sort _sortOption = Sort.non;
+
+  @observable
+  FuelType? _sortFuelType;
+
+  @observable
+  bool _sortAsc = true;
 
   @observable
   dynamic _error;
 
   @observable
-  FuelType standardFuelType = FuelType.die;
+  FuelType _standardFuelType = FuelType.die;
 
   @observable
   bool _isLoading = false;
@@ -66,10 +73,16 @@ abstract class _MainStore with Store {
   @computed
   dynamic get error => _error;
 
+  @computed
+  FuelType get standardFuelType => _standardFuelType;
+
+  @computed
+  bool get hasAlreadyReadIntro => _hasAlreadyReadIntro;
+
   @action
   void setDefaultFuelType(FuelType fuelType) {
-    if (standardFuelType != fuelType) {
-      standardFuelType = fuelType;
+    if (_standardFuelType != fuelType) {
+      _standardFuelType = fuelType;
       SharedPreferences.getInstance().then((value) => value.setInt('fuelType', fuelType.index));
     }
   }

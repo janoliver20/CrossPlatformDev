@@ -1,8 +1,5 @@
-import 'package:Me_Fuel/main.dart';
-import 'package:Me_Fuel/stores/main_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 
 // final getIt = GetIt.instance;
 
@@ -57,15 +54,15 @@ class _DemoScreenState extends State<DemoScreen> {
             const Text(
               'You have pushed the button this many times on Screen:',
             ),
-            Text(
-              '0',
+            Observer(builder: (_) => Text(
+              '${store.regions.length}',
               style: Theme.of(context).textTheme.headline4,
-            )
+            ))
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
