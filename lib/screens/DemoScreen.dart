@@ -53,16 +53,12 @@ class _DemoScreenState extends State<DemoScreen> {
           children: <Widget>[
             const Text(
               'You have pushed the button this many times on Screen:',
-            ),
-            Observer(builder: (_) => Text(
-              '${store.regions.length}',
-              style: Theme.of(context).textTheme.headline4,
-            ))
+            )
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: (){},
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),

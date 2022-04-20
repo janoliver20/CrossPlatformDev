@@ -35,6 +35,12 @@ mixin _$MainStore on _MainStore, Store {
           Computed<bool>(() => super.hasAlreadyReadIntro,
               name: '_MainStore.hasAlreadyReadIntro'))
       .value;
+  Computed<String?>? _$usernameComputed;
+
+  @override
+  String? get username => (_$usernameComputed ??=
+          Computed<String?>(() => super.username, name: '_MainStore.username'))
+      .value;
 
   final _$_hasAlreadyReadIntroAtom =
       Atom(name: '_MainStore._hasAlreadyReadIntro');
@@ -50,6 +56,36 @@ mixin _$MainStore on _MainStore, Store {
     _$_hasAlreadyReadIntroAtom.reportWrite(value, super._hasAlreadyReadIntro,
         () {
       super._hasAlreadyReadIntro = value;
+    });
+  }
+
+  final _$_standardFuelTypeAtom = Atom(name: '_MainStore._standardFuelType');
+
+  @override
+  FuelType get _standardFuelType {
+    _$_standardFuelTypeAtom.reportRead();
+    return super._standardFuelType;
+  }
+
+  @override
+  set _standardFuelType(FuelType value) {
+    _$_standardFuelTypeAtom.reportWrite(value, super._standardFuelType, () {
+      super._standardFuelType = value;
+    });
+  }
+
+  final _$_usernameAtom = Atom(name: '_MainStore._username');
+
+  @override
+  String? get _username {
+    _$_usernameAtom.reportRead();
+    return super._username;
+  }
+
+  @override
+  set _username(String? value) {
+    _$_usernameAtom.reportWrite(value, super._username, () {
+      super._username = value;
     });
   }
 
@@ -113,21 +149,6 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
-  final _$_standardFuelTypeAtom = Atom(name: '_MainStore._standardFuelType');
-
-  @override
-  FuelType get _standardFuelType {
-    _$_standardFuelTypeAtom.reportRead();
-    return super._standardFuelType;
-  }
-
-  @override
-  set _standardFuelType(FuelType value) {
-    _$_standardFuelTypeAtom.reportWrite(value, super._standardFuelType, () {
-      super._standardFuelType = value;
-    });
-  }
-
   final _$_isLoadingAtom = Atom(name: '_MainStore._isLoading');
 
   @override
@@ -143,6 +164,13 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
+  final _$setupAsyncAction = AsyncAction('_MainStore.setup');
+
+  @override
+  Future<void> setup() {
+    return _$setupAsyncAction.run(() => super.setup());
+  }
+
   final _$_MainStoreActionController = ActionController(name: '_MainStore');
 
   @override
@@ -151,6 +179,28 @@ mixin _$MainStore on _MainStore, Store {
         name: '_MainStore.setDefaultFuelType');
     try {
       return super.setDefaultFuelType(fuelType);
+    } finally {
+      _$_MainStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setHasSeenIntro(bool hasSeen) {
+    final _$actionInfo = _$_MainStoreActionController.startAction(
+        name: '_MainStore.setHasSeenIntro');
+    try {
+      return super.setHasSeenIntro(hasSeen);
+    } finally {
+      _$_MainStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setUsername(String name) {
+    final _$actionInfo = _$_MainStoreActionController.startAction(
+        name: '_MainStore.setUsername');
+    try {
+      return super.setUsername(name);
     } finally {
       _$_MainStoreActionController.endAction(_$actionInfo);
     }
@@ -254,7 +304,8 @@ mixin _$MainStore on _MainStore, Store {
 isLoading: ${isLoading},
 error: ${error},
 standardFuelType: ${standardFuelType},
-hasAlreadyReadIntro: ${hasAlreadyReadIntro}
+hasAlreadyReadIntro: ${hasAlreadyReadIntro},
+username: ${username}
     ''';
   }
 }

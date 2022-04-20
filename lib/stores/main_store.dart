@@ -29,18 +29,27 @@ class MainStore = _MainStore with _$MainStore;
 abstract class _MainStore with Store {
   final EControlAPI _eControlAPI = EControlAPI();
 
-  MainStore() => autorun((_) {
-    if (error != null) {
-      print("Error: " + error.toString());
-    }
-    SharedPreferences.getInstance()
-      .then((value) => _hasAlreadyReadIntro = value.getBool('firstTime') ?? false);
-    SharedPreferences.getInstance()
-      .then((value) => _standardFuelType = FuelType.values[value.getInt("fuelType") ?? 0]);
-  });
+  @action
+  Future<void> setup() async {
+    autorun((_) {
+      if (error != null) {
+        print("Error: " + error.toString());
+      }
+    });
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    _hasAlreadyReadIntro = preferences.getBool('firstTime') ?? false;
+    _standardFuelType = FuelType.values[preferences.getInt("fuelType") ?? 0];
+    _username = preferences.getString('username') ?? null;
+  }
 
   @observable
   bool _hasAlreadyReadIntro = false;
+
+  @observable
+  FuelType _standardFuelType = FuelType.die;
+
+  @observable
+  String? _username;
 
   @observable
   Sort _sortOption = Sort.non;
@@ -53,9 +62,6 @@ abstract class _MainStore with Store {
 
   @observable
   dynamic _error;
-
-  @observable
-  FuelType _standardFuelType = FuelType.die;
 
   @observable
   bool _isLoading = false;
@@ -79,11 +85,30 @@ abstract class _MainStore with Store {
   @computed
   bool get hasAlreadyReadIntro => _hasAlreadyReadIntro;
 
+  @computed
+  String? get username => _username;
+
   @action
   void setDefaultFuelType(FuelType fuelType) {
     if (_standardFuelType != fuelType) {
       _standardFuelType = fuelType;
       SharedPreferences.getInstance().then((value) => value.setInt('fuelType', fuelType.index));
+    }
+  }
+
+  @action
+  void setHasSeenIntro(bool hasSeen) {
+    if (_hasAlreadyReadIntro != hasSeen) {
+      _hasAlreadyReadIntro = hasSeen;
+      SharedPreferences.getInstance().then((value) => value.setBool('firstTime', hasSeen));
+    }
+  }
+
+  @action
+  void setUsername(String name) {
+    if (name.trim() != "") {
+      _username = name;
+      SharedPreferences.getInstance().then((value) => value.setString('username', name));
     }
   }
 

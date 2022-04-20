@@ -22,7 +22,8 @@ Future<void> main() async {
   await dotenv.load();
   getIt.registerLazySingleton(() => MainStore());
   final store = getIt<MainStore>();
-
+  await store.setup();
+  store.getGasStationsAtCurrentLocation();
   runApp(MyApp(hasAlreadyReadIntro: store.hasAlreadyReadIntro));
 }
 
