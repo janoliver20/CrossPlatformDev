@@ -1,3 +1,4 @@
+import 'package:Me_Fuel/Colors.dart';
 import 'package:Me_Fuel/Strings.dart';
 import 'package:Me_Fuel/stores/main_store.dart';
 import 'package:flutter/cupertino.dart';
@@ -106,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (context, index) =>
                       Card(
                         key: ValueKey(store.gasStations[index].id),
-                        color: const Color.fromRGBO(181, 223, 253, 1.0),
+                        color: CustomColors.primaryLight,
                         elevation: 4,
                         child: Padding(
                           padding: const EdgeInsets.all(0.0),
