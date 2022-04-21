@@ -1,11 +1,10 @@
+import 'package:Me_Fuel/Strings.dart';
 import 'package:Me_Fuel/stores/main_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-
 import 'detailPage.dart';
 import 'package:flutter/foundation.dart';
-
 import 'main.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,11 +25,11 @@ class _HomePageState extends State<HomePage> {
   // This list holds the data for the list view
   List<Map<String, dynamic>> _filteredGasStations = [];
   List<String> dropDownOptions = <String>[
-    "Default",
-    "Name",
-    "Price",
-    "Distance",
-    "Location"
+    Strings.list_sort_default,
+    Strings.list_sort_name,
+    Strings.list_sort_price,
+    Strings.list_sort_distance,
+    Strings.list_sort_location
   ];
 
   @override
@@ -63,7 +62,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tankstellen'),
+        title: const Text(Strings.list_title),
 
         actions: [
           PopupMenuButton<int>(icon: Icon(Icons.sort),
@@ -92,7 +91,7 @@ class _HomePageState extends State<HomePage> {
             TextField(
               onChanged: (value) => _runFilter(value),
               decoration: const InputDecoration(
-                  labelText: 'Search', suffixIcon: Icon(Icons.search)),
+                  labelText: Strings.list_search_placeholder, suffixIcon: Icon(Icons.search)),
             ),
 
             const SizedBox(
@@ -185,9 +184,9 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                )  : const Text(
-                  'No results found',
-                  style: TextStyle(fontSize: 24),
+                ) : const Text(
+                      Strings.list_no_result,
+                      style: TextStyle(fontSize: 24),
                 );
               })
             ),
