@@ -3,40 +3,36 @@ import 'dart:math';
 import 'package:Me_Fuel/HomePage.dart';
 import 'dart:async';
 
+
 import 'package:Me_Fuel/Screens/DemoScreen.dart';
+import 'package:Me_Fuel/screens/IntroScreen.dart';
+
+import 'package:Me_Fuel/detailPage.dart';
+import 'package:Me_Fuel/screens/UserScreen.dart';
 import 'package:Me_Fuel/services/e-control/e-control_api.dart';
 import 'package:Me_Fuel/screens/MapScreen.dart';
 import 'package:Me_Fuel/stores/main_store.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.asNewInstance();
 
 Future<void> main() async {
   await dotenv.load();
   getIt.registerLazySingleton(() => MainStore());
-
-  var econtrol = EControlAPI();
-  // econtrol.queryRegionUnits().then((value) {
-  //   inspect(value);
-  // });
-  // econtrol.queryRegions().then((value) {
-  //   inspect(value);
-  // });
-  // econtrol.queryGasStationsByRegion(code: 1, regionType: RegionType.bl, includeClosed: false).then((value) {
-  //   inspect(value);
-  // });
-
-  runApp(const MyApp());
-
+  final store = getIt<MainStore>();
+  await store.setup();
+  store.getGasStationsAtCurrentLocation();
+  runApp(MyApp(hasAlreadyReadIntro: store.hasAlreadyReadIntro));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final bool hasAlreadyReadIntro;
+  const MyApp({Key? key, required this.hasAlreadyReadIntro}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -55,7 +51,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'MeFuel Homepage'),
+      home: hasAlreadyReadIntro ? const MyHomePage(title: 'MeFuel Homepage') : const IntroScreen(),
     );
   }
 }
@@ -99,12 +95,13 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _pages = <Widget>[
 
     new HomePage(),
-    new MapScreen()
+    new MapScreen(),
+    new UserScreen()
 
   ];
 
   static const List<String> _pageTitles = <String>[
-    "Tankstellen", "Map"
+    "Tankstellen", "Map", "User"
   ];
 
   @override
@@ -117,16 +114,12 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
 
     return Scaffold(
-     /* appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(_pageTitles.elementAt(_selectedIndex)),
-      ),*/
       body: _pages.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.list), label: "Tankstellen"),
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map")
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
+          BottomNavigationBarItem(icon: new Image.asset("assets/icons/user24.png"), label: "User")
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

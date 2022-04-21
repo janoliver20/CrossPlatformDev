@@ -23,6 +23,19 @@ String getFuelType(FuelType type)
       return "DIE";
   }
 }
+
+String getFuelTypeName(FuelType type)
+{
+  switch(type) {
+    case FuelType.sup:
+      return "Super";
+    case FuelType.gas:
+      return "Gas";
+    case FuelType.die:
+      return "Diesel";
+  }
+}
+
 List<GasStation> gasStationFromJson(String str) => List<GasStation>.from(json.decode(str).map((x) => GasStation.fromJson(x)));
 
 String gasStationToJson(List<GasStation> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
