@@ -1,18 +1,18 @@
-import 'package:flutter/cupertino.dart';
-import 'package:Me_Fuel/scrollView.dart';
+import 'package:Me_Fuel/models/GasStation.dart';
+import 'package:Me_Fuel/screens/GasStationListScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../Strings.dart';
 
 
 
-class DetailPage extends StatelessWidget {
 
-  var name, price, distance, address, fuelName, long,lat,dayOpen,payment,contact, postalcode, city;
+class DetailScreen extends StatelessWidget {
 
+  GasStation gasStation;
 
-  DetailPage(
-      {this.name, this.price, this.distance, this.address, this.fuelName, this.long, this.lat,this.dayOpen,this.payment,this.contact, this.postalcode,  this.city});
+  DetailScreen({required this.gasStation});
 
 
   @override
@@ -20,24 +20,21 @@ class DetailPage extends StatelessWidget {
     final topContentText = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        SizedBox(height: 45.0),
-        address.toString().length > 25 ?
-    Text(
-    address.toString().substring(0,25)+"...",
-    style: TextStyle(color: Colors.white, fontSize: 18.0),
-    ) :
-    Text(
-    address.toString(),
-    style: TextStyle(color: Colors.white, fontSize: 18.0),),
+        const SizedBox(height: 45.0),
+        Text(
+          gasStation.location.address.toString().truncate(25),
+          style: const TextStyle(color: Colors.white, fontSize: 18.0),
+        ),
+       Text(
+         gasStation.location.postalCode.toString() + " " + gasStation.location.city.toString() ,
+          style: const TextStyle(color: Colors.white),
+       ),
 
-       Text(postalcode.toString() + " " + city.toString() ,
-          style: TextStyle(color: Colors.white),),
-
-        SizedBox(height: 10.0),
+        const SizedBox(height: 10.0),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Icon(
+            const Icon(
               Icons.directions_car,
               color: Colors.white,
               size: 18.0,
@@ -47,39 +44,40 @@ class DetailPage extends StatelessWidget {
                 child: Padding(
                     padding: EdgeInsets.only(left: 10.0),
                     child: Text(
-                      distance.toString() + " km",
-                      style: TextStyle(color: Colors.white),
+                      gasStation.distance?.toString() ?? "-" + " km",
+                      style: const TextStyle(color: Colors.white),
                     ))),
-
           ],
         ),
       ],
     );
+
     final addressContent = Stack(
       children: <Widget>[
         Container(
-            padding: EdgeInsets.only(left: 10.0),
+            padding: const EdgeInsets.only(left: 10.0),
             height: MediaQuery
                 .of(context)
                 .size
                 .height * 0.3,
-            decoration: new BoxDecoration(
-              image: new DecorationImage(
-                image: new AssetImage("assets/images/map_test_detail.JPG"),
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/map_test_detail.JPG"),
                 fit: BoxFit.cover,
               ),
-            )),
+            )
+        ),
         Container(
           height: MediaQuery
               .of(context)
               .size
               .height * 0.3,
-          padding: EdgeInsets.all(40.0),
+          padding: const EdgeInsets.all(40.0),
           width: MediaQuery
               .of(context)
               .size
               .width,
-          decoration: BoxDecoration(color: Color.fromRGBO(58, 66, 86, .9)),
+          decoration: BoxDecoration(color: const Color.fromRGBO(58, 66, 86, .9)),
           child: Center(
             child: topContentText,
           ),
@@ -89,31 +87,24 @@ class DetailPage extends StatelessWidget {
           bottom: 30.0,
           child: InkWell(
             onTap: () {
-              print("To Google Maps ");
-              print(long);
-              print(lat);
-              MapUtils.openMap(long, lat);
+              MapUtils.openMap(gasStation.location.longitude, gasStation.location.latitude);
             },
-            child: Icon(Icons.assistant_navigation, color: Colors.green, size: 45),
+            child: const Icon(Icons.assistant_navigation, color: Colors.green, size: 45),
           ),
         ),
-
       ],
     );
 
-
-
     final priceContentText =
-    price.toString().isNotEmpty ?
+    gasStation.prices.isNotEmpty ?
          Text(
-              fuelName.toString()+ "                " + price.toString() + " €",
-              style: TextStyle(fontSize: 18.0),
-            ):
-    Text(
-      "Kein Preis verfügbar",
-      style: TextStyle(fontSize: 18.0),
-    );
-
+              getFuelType().toString()+ "                " + gasStation.prices[0].amount.toString() + " €/l",
+              style: const TextStyle(fontSize: 18.0),
+            ) :
+        const Text(
+          Strings.gasStationDetail_noPrices,
+          style: TextStyle(fontSize: 18.0),
+        );
 
 
     final priceContent = Container(
@@ -122,7 +113,7 @@ class DetailPage extends StatelessWidget {
           .size
           .width,
       // color: Theme.of(context).primaryColor,
-      padding: EdgeInsets.all(15.0),
+      padding: const EdgeInsets.all(15.0),
 
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -134,24 +125,17 @@ class DetailPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: Column(
                     children: <Widget>[
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       ExpansionTile(
-                        title: Text(
-                          "Preise",
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold
-                          ),
+                        title: const Text(
+                          Strings.gasStationDetail_prices_title,
+                          style: TextStyle( fontSize: 18.0, fontWeight: FontWeight.bold ),
                         ),
                         children: <Widget>[
-
                           ListTile(
                             title: priceContentText,
                           ),
-
-
                         ],
-
                       ),
                     ],
                   ),
@@ -159,16 +143,9 @@ class DetailPage extends StatelessWidget {
               ),
             ],
           ),
-
         ],
       ),
     );
-
-
-
-
-
-
 
     final openHourContent = Container(
       // height: MediaQuery.of(context).size.height,
@@ -177,7 +154,7 @@ class DetailPage extends StatelessWidget {
           .size
           .width,
       // color: Theme.of(context).primaryColor,
-      padding: EdgeInsets.all(15.0),
+      padding: const EdgeInsets.all(15.0),
 
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -189,10 +166,10 @@ class DetailPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: Column(
                     children: <Widget>[
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       ExpansionTile(
-                        title: Text(
-                          "Öffnungszeiten",
+                        title: const Text(
+                          Strings.gasStationDetail_openingHours_title,
                           style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.bold
@@ -202,46 +179,48 @@ class DetailPage extends StatelessWidget {
 
                           ListTile(
                             title: Text(
-                                dayOpen[0].day +"            "+ dayOpen[0].from + "-" + dayOpen[0].to
+                                gasStation.openingHours[0].day
+                            ),
+                            trailing: Text(
+                                gasStation.openingHours[0].from + "-" + gasStation.openingHours[0].to
                             ),
                           ),
                           ListTile(
                             title: Text(
-                                dayOpen[1].day +"              "+ dayOpen[1].from + "-" + dayOpen[1].to
+                                gasStation.openingHours[1].day +"              "+ gasStation.openingHours[1].from + "-" + gasStation.openingHours[1].to
                             ),
                           ),
                           ListTile(
                             title: Text(
-                                dayOpen[2].day +"             "+ dayOpen[2].from + "-" + dayOpen[2].to
+                                gasStation.openingHours[2].day +"             "+ gasStation.openingHours[2].from + "-" + gasStation.openingHours[2].to
                             ),
                           ),
                           ListTile(
                             title: Text(
-                                dayOpen[3].day +"            "+ dayOpen[3].from + "-" + dayOpen[3].to
+                                gasStation.openingHours[3].day +"            "+ gasStation.openingHours[3].from + "-" + gasStation.openingHours[3].to
                             ),
                           ),
                           ListTile(
                             title: Text(
-                                dayOpen[4].day +"            "+ dayOpen[4].from + "-" + dayOpen[4].to
+                                gasStation.openingHours[4].day +"            "+ gasStation.openingHours[4].from + "-" + gasStation.openingHours[4].to
                             ),
                           ),
                           ListTile(
                             title: Text(
-                                dayOpen[5].day +"            "+ dayOpen[5].from + "-" + dayOpen[5].to
+                                gasStation.openingHours[5].day +"            "+ gasStation.openingHours[5].from + "-" + gasStation.openingHours[5].to
                             ),
                           ),
                           ListTile(
                             title: Text(
-                                dayOpen[6].day +"            "+ dayOpen[6].from + "-" + dayOpen[6].to
+                                gasStation.openingHours[6].day +"            "+ gasStation.openingHours[6].from + "-" + gasStation.openingHours[6].to
                             ),
                           ),
                           ListTile(
                             title: Text(
-                                dayOpen[7].day +"             "+ dayOpen[7].from + "-" + dayOpen[7].to
+                                gasStation.openingHours[7].day +"             "+ gasStation.openingHours[7].from + "-" + gasStation.openingHours[7].to
                             ),
                           ),
                         ],
-
                       ),
                     ],
                   ),
@@ -254,8 +233,6 @@ class DetailPage extends StatelessWidget {
 
       ),
     );
-
-
 
     final paymentContent = Container(
       // height: MediaQuery.of(context).size.height,
@@ -264,7 +241,7 @@ class DetailPage extends StatelessWidget {
           .size
           .width,
       // color: Theme.of(context).primaryColor,
-      padding: EdgeInsets.all(15.0),
+      padding: const EdgeInsets.all(15.0),
 
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -278,39 +255,26 @@ class DetailPage extends StatelessWidget {
                     children: <Widget>[
                       SizedBox(height: 20.0),
                       ExpansionTile(
-                        title: Text(
-                          "Zahlungsmöglichkeiten",
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold
-                          ),
+                        title: const Text(
+                          Strings.gasStationDetail_paymentMethods_title,
+                          style: TextStyle( fontSize: 18.0, fontWeight: FontWeight.bold ),
                         ),
                         children: <Widget>[
-
                           ListTile(
-
-                            title: Text(
-                                'Bar'
-                            ),
-                            leading: payment.cash == true ?
-                            const Icon(Icons.check_circle, color: Colors.green, size: 25) :
-                            const Icon(Icons.do_not_disturb, color: Colors.red, size: 25),
-
-
-                          ),
-                          ListTile(
-                            title: Text(
-                                'Bankkarte'
-                            ),
-                            leading: payment.creditCard == true ?
+                            title: Text( Strings.gasStationDetail_paymentMethods_cash ),
+                            leading: gasStation.paymentMethods.cash == true ?
                             const Icon(Icons.check_circle, color: Colors.green, size: 25) :
                             const Icon(Icons.do_not_disturb, color: Colors.red, size: 25),
                           ),
                           ListTile(
-                            title: Text(
-                                'Kreditkarte'
-                            ),
-                            leading: payment.debitCard == true ?
+                            title: Text( Strings.gasStationDetail_paymentMethods_creditCard ),
+                            leading: gasStation.paymentMethods.creditCard == true ?
+                            const Icon(Icons.check_circle, color: Colors.green, size: 25) :
+                            const Icon(Icons.do_not_disturb, color: Colors.red, size: 25),
+                          ),
+                          ListTile(
+                            title: Text( Strings.gasStationDetail_paymentMethods_debitCard ),
+                            leading: gasStation.paymentMethods.debitCard == true ?
                             const Icon(Icons.check_circle, color: Colors.green, size: 25) :
                             const Icon(Icons.do_not_disturb, color: Colors.red, size: 25),
                           ),
@@ -328,7 +292,6 @@ class DetailPage extends StatelessWidget {
         ],
       ),
     );
-
 
     final contactContent = Container(
       // height: MediaQuery.of(context).size.height,
@@ -337,7 +300,7 @@ class DetailPage extends StatelessWidget {
           .size
           .width,
       // color: Theme.of(context).primaryColor,
-      padding: EdgeInsets.all(15.0),
+      padding: const EdgeInsets.all(15.0),
 
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -351,42 +314,37 @@ class DetailPage extends StatelessWidget {
                     children: <Widget>[
                       SizedBox(height: 20.0),
                       ExpansionTile(
-                        title: Text(
+                        title: const Text(
                           "Kontakt",
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold
-                          ),
+                          style: TextStyle( fontSize: 18.0, fontWeight: FontWeight.bold ),
                         ),
                         children: <Widget>[
 
                           ListTile(
-                            title: contact.telephone.toString() == "null" ? Text(
+                            title: gasStation.contact?.telephone.toString() == "null" ? const Text(
                                 'Telefon:  nicht vorhanden '
                             ) :
                             Text(
-                                'Telefon:  +' + contact.telephone.toString()
+                                'Telefon:  +' + gasStation.contact!.telephone.toString()
                             ),
                           ),
                           ListTile(
-                            title: contact.mail.toString() == "null" ? Text(
+                            title: gasStation.contact?.mail.toString() == "null" ? const Text(
                                 'Mail:  nicht vorhanden'
                             ) :
                             Text(
-                                'Mail:  ' + contact.mail.toString()
+                                'Mail:  ' + gasStation.contact!.mail.toString()
                             ),
                           ),
                           ListTile(
-                            title: contact.website.toString() == "null" ? Text(
+                            title: gasStation.contact?.website.toString() == "null" ? const Text(
                                 'Web:  nicht vorhanden'
                             ) :
                             Text(
-                                'Web:  ' + contact.website.toString()
+                                'Web:  ' + gasStation.contact!.website.toString()
                             ),
                           ),
-
                         ],
-
                       ),
                     ],
                   ),
@@ -394,7 +352,6 @@ class DetailPage extends StatelessWidget {
               ),
             ],
           ),
-
         ],
       ),
     );
@@ -403,23 +360,11 @@ class DetailPage extends StatelessWidget {
     return Scaffold(
 
       appBar: AppBar(
-        title: Text(name.toString() + " Detailansicht"),
+        title: Text(gasStation.name.toString()),
       ),
 
       body: SingleChildScrollView(
-
-          child: price.toString().isNotEmpty ? Column(
-        //height: 100,
-            children: [
-              addressContent,
-              priceContent,
-              openHourContent,
-              paymentContent,
-              contactContent
-            ],
-
-
-      ) :
+        child:
           Column(
             //height: 100,
             children: [
@@ -429,22 +374,31 @@ class DetailPage extends StatelessWidget {
               paymentContent,
               contactContent
             ],
-
-
           ),
       ),
     );
+  }
+
+  String getFuelType(){
+    String fuelType = gasStation.prices[0].fuelType.toString();
+
+    if(fuelType == "FuelType.die"){
+      return "Diesel: ";
+    } else  if(fuelType == "FuelType.sup"){
+      return "Super: ";
+    } else  if(fuelType == "FuelType.gas"){
+      return "Gas: ";
+    }
+    return "-";
   }
 
 }
 
 
 class MapUtils {
-
   MapUtils._();
 
   static Future<void> openMap(double latitude, double longitude) async {
-
     String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$longitude,$latitude';
     if (await canLaunch(googleUrl)) {
       await launch(googleUrl);

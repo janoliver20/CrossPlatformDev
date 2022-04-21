@@ -1,4 +1,4 @@
-import 'package:Me_Fuel/HomePage.dart';
+import 'package:Me_Fuel/screens/GasStationListScreen.dart';
 import 'package:Me_Fuel/main.dart';
 import 'package:Me_Fuel/models/GasStation.dart';
 import 'package:Me_Fuel/stores/main_store.dart';
