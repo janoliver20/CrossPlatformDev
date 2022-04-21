@@ -10,14 +10,11 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_maps_webservice/places.dart' as places;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:Me_Fuel/models/GasStation.dart';
-
 import 'package:permission_handler/permission_handler.dart' as pm;
-
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
-
 import '../Strings.dart';
 import '../main.dart';
 
@@ -33,12 +30,11 @@ class MapScreen extends StatefulWidget {
 class MapScreenState extends State<MapScreen> {
 
   static const CameraPosition defaultPosition = CameraPosition(target: LatLng(48.36784132608749, 14.514988624961328), zoom: 14);
-  late GoogleMapController _controller;
-  Map<MarkerId, Marker> _markersMap = {};
+  final Map<MarkerId, Marker> _markersMap = {};
   final key = "AIzaSyBGmu809RbXJiJ6sLz8wxlj_BLmY7Re8bI";
   late places.GoogleMapsPlaces _places;
+  late GoogleMapController _controller;
   bool _navigationButtonEnabled = false;
-
   GasStation? _selectedGasStation;
   final store = getIt<MainStore>();
 
