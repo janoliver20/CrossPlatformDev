@@ -3,7 +3,7 @@
 
 import 'dart:async';
 
-
+import 'dart:io' show Platform;
 import 'package:Me_Fuel/services/e-control/e-control_api.dart';
 import 'package:Me_Fuel/services/location.service.dart';
 import 'package:Me_Fuel/stores/main_store.dart';
@@ -137,6 +137,7 @@ void _onCameraMove(CameraPosition position) {
               onMapCreated: _onMapCreated,
               myLocationEnabled: true,
               onCameraMove: _onCameraMove,
+              mapToolbarEnabled: true,
               onTap: (_) {
                 setState(() {
                   _selectedGasStation = null;
@@ -145,13 +146,14 @@ void _onCameraMove(CameraPosition position) {
               },
             ),
             Align(
-              alignment: Alignment.bottomRight,
-              child: Visibility(
-                    visible: _navigationButtonEnabled,
+                alignment: Alignment.bottomRight,
+                child: Visibility(
+                    visible: _navigationButtonEnabled && Platform.isIOS,
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 80, right: 10),
                       child: FloatingActionButton(
                         onPressed: _navigationButtonEnabled ? () {
+                          print("Platform iOS: " + Platform.isIOS.toString());
                           openMap(_selectedGasStation!.location.latitude, _selectedGasStation!.location.longitude);
                         } : null,
                         child: Icon(Icons.navigation),
@@ -231,12 +233,17 @@ void _onCameraMove(CameraPosition position) {
             Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) {
-                  return DetailPage(
-                    name: gasStation.name
-                        .toString(),
-                    price: gasStation.prices.toString(),
-                    distance: gasStation.distance!
-                        .toString(),
+                  return DetailPage(name: gasStation.name,
+                    price: gasStation.prices,
+                    distance: gasStation.distance,
+                    long: gasStation.location.longitude,
+                    lat: gasStation.location.latitude,
+                    dayOpen: gasStation.openingHours,
+                    payment: gasStation.paymentMethods,
+                    contact: gasStation.contact,
+                    postalcode: gasStation.location.postalCode,
+                    city: gasStation.location.city,
+                    address: gasStation.location.address,
                   );
                 })
               //MaterialPageRoute(builder: (context) => const DetailPage()),
