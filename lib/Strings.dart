@@ -38,10 +38,21 @@ class Strings {
   static const String gasStationDetail_prices_title = "Prices";
   static const String gasStationDetail_openingHours_title = "Opening Hours";
   static const String gasStationDetail_paymentMethods_title = "Payment Methods";
+  static const String gasStationDetail_contact_title = "Contact";
 
   static const String gasStationDetail_paymentMethods_cash = "Cash";
   static const String gasStationDetail_paymentMethods_creditCard = "Credit Card";
   static const String gasStationDetail_paymentMethods_debitCard = "Debit Card";
+
+  static const String gasStationDetail_fuelType_diesel = "Diesel";
+  static const String gasStationDetail_fuelType_super = "Super";
+  static const String gasStationDetail_fuelType_gas = "Gas";
+
+  static const String gasStationDetail_contact_telephone = "Telephone";
+  static const String gasStationDetail_contact_mail = "Mail";
+  static const String gasStationDetail_contact_web = "Web";
+
+
   /*---------------
     Error Screen
    ---------------*/
