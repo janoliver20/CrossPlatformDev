@@ -1,23 +1,14 @@
-import 'dart:math';
-
 import 'package:Me_Fuel/HomePage.dart';
+import 'package:Me_Fuel/Strings.dart';
 import 'dart:async';
-
-
-import 'package:Me_Fuel/Screens/DemoScreen.dart';
 import 'package:Me_Fuel/screens/IntroScreen.dart';
-
-import 'package:Me_Fuel/detailPage.dart';
-import 'package:Me_Fuel/screens/UserScreen.dart';
-import 'package:Me_Fuel/services/e-control/e-control_api.dart';
 import 'package:Me_Fuel/screens/MapScreen.dart';
+import 'package:Me_Fuel/screens/UserScreen.dart';
 import 'package:Me_Fuel/stores/main_store.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mobx/mobx.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.asNewInstance();
 
@@ -94,14 +85,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final List<Widget> _pages = <Widget>[
 
-    new HomePage(),
-    new MapScreen(),
-    new UserScreen()
+    const HomePage(),
+    const MapScreen(),
+    const UserScreen()
 
-  ];
-
-  static const List<String> _pageTitles = <String>[
-    "Tankstellen", "Map", "User"
   ];
 
   @override
@@ -117,9 +104,9 @@ class _MyHomePageState extends State<MyHomePage> {
       body: _pages.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: "Tankstellen"),
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
-          BottomNavigationBarItem(icon: new Image.asset("assets/icons/user24.png"), label: "User")
+          const BottomNavigationBarItem(icon: Icon(Icons.list), label: Strings.bottom_gas_station_list_screen),
+          const BottomNavigationBarItem(icon: Icon(Icons.map), label: Strings.bottom_map_screen),
+          BottomNavigationBarItem(icon: Image.asset("assets/icons/user24.png"), label: Strings.bottom_user_screen)
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
@@ -132,7 +119,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> checkForLocationPermission() async {
 
-
     //TODO Show dialog for asking for permission
     final status = await Permission.location.status;
     if (status == PermissionStatus.granted) {
@@ -142,6 +128,5 @@ class _MyHomePageState extends State<MyHomePage> {
     } else if (status == PermissionStatus.permanentlyDenied) {
       await openAppSettings();
     }
-
   }
 }

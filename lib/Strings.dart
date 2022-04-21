@@ -1,4 +1,12 @@
 class Strings {
+
+  /*---------------
+    Bottom Navigation
+   ---------------*/
+  static const String bottom_gas_station_list_screen = "Gas Stations";
+  static const String bottom_map_screen = "Map";
+  static const String bottom_user_screen = "User";
+
   /*---------------
     Intro Screens
    ---------------*/
