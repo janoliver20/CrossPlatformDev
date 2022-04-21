@@ -1,10 +1,7 @@
-
-
-
 import 'dart:async';
 
 import 'dart:io' show Platform;
-import 'package:Me_Fuel/services/e-control/e-control_api.dart';
+import 'package:Me_Fuel/screens/DetailScreen.dart';
 import 'package:Me_Fuel/services/location.service.dart';
 import 'package:Me_Fuel/stores/main_store.dart';
 import 'package:flutter/material.dart';
@@ -12,25 +9,21 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_maps_webservice/places.dart' as places;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart' as mapLocation;
 import 'package:Me_Fuel/models/GasStation.dart';
 
 import 'package:permission_handler/permission_handler.dart' as pm;
 
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:mobx/mobx.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
 
 import '../Strings.dart';
-import '../detailPage.dart';
 import '../main.dart';
 
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
-
 
   @override
   State<MapScreen> createState() => MapScreenState();
@@ -41,21 +34,16 @@ class MapScreenState extends State<MapScreen> {
 
   static const CameraPosition defaultPosition = CameraPosition(target: LatLng(48.36784132608749, 14.514988624961328), zoom: 14);
   late GoogleMapController _controller;
-  mapLocation.Location _location = mapLocation.Location();
-  final EControlAPI _api = EControlAPI();
-  List<GasStation> _listGasStations = List.empty();
   Map<MarkerId, Marker> _markersMap = {};
   final key = "AIzaSyBGmu809RbXJiJ6sLz8wxlj_BLmY7Re8bI";
   late places.GoogleMapsPlaces _places;
   bool _navigationButtonEnabled = false;
-
 
   GasStation? _selectedGasStation;
   final store = getIt<MainStore>();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _places = places.GoogleMapsPlaces(apiKey: key);
   }
@@ -66,16 +54,15 @@ class MapScreenState extends State<MapScreen> {
     LocationService.determinePosition().then((l) {
       var longitude = l.longitude;
       var latitude = l.latitude;
-      if (longitude != null && latitude != null) {
 
-        _controller.animateCamera(
-            CameraUpdate.newCameraPosition(
-                CameraPosition(target: LatLng(latitude, longitude), zoom: 12.5)
-            )
-        );
+      _controller.animateCamera(
+          CameraUpdate.newCameraPosition(
+              CameraPosition(target: LatLng(latitude, longitude), zoom: 12.5)
+          )
+      );
 
-        store.getGasStationsAtCurrentLocation();
-      }
+      store.getGasStationsAtCurrentLocation();
+
     }).onError((error, stackTrace) {
       showDialog(context: context, builder: (context) => AlertDialog(
         title: const Text(Strings.map_location_required_title),
@@ -93,14 +80,11 @@ class MapScreenState extends State<MapScreen> {
 void _onCameraMove(CameraPosition position) {
 
     var cameraPosition = position.target;
-    print(position.zoom);
     if (position.zoom >= 10){
       store.getGasStationAtLocation(cameraPosition.latitude, cameraPosition.longitude);
     }
 
 }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -116,12 +100,12 @@ void _onCameraMove(CameraPosition position) {
              displayPrediction(p);
 
             },
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
           ),
         ]
       ),
       body: Observer(builder: (_) {
-        store.gasStations.isNotEmpty ? addMarkerToList(store.gasStations) : print("No gasstations found");
+        store.gasStations.isNotEmpty ? addMarkerToList(store.gasStations) : print(Strings.list_no_result);
         return Stack(
           children: <Widget>[
             GoogleMap(
@@ -147,10 +131,9 @@ void _onCameraMove(CameraPosition position) {
                       padding: const EdgeInsets.only(bottom: 80, right: 10),
                       child: FloatingActionButton(
                         onPressed: _navigationButtonEnabled ? () {
-                          print("Platform iOS: " + Platform.isIOS.toString());
                           openMap(_selectedGasStation!.location.latitude, _selectedGasStation!.location.longitude);
                         } : null,
-                        child: Icon(Icons.navigation),
+                        child: const Icon(Icons.navigation),
                       ),
                     )
                 )
@@ -217,20 +200,8 @@ void _onCameraMove(CameraPosition position) {
             Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) {
-                  return DetailPage(name: gasStation.name,
-                    price: gasStation.prices,
-                    distance: gasStation.distance,
-                    long: gasStation.location.longitude,
-                    lat: gasStation.location.latitude,
-                    dayOpen: gasStation.openingHours,
-                    payment: gasStation.paymentMethods,
-                    contact: gasStation.contact,
-                    postalcode: gasStation.location.postalCode,
-                    city: gasStation.location.city,
-                    address: gasStation.location.address,
-                  );
+                  return DetailScreen(gasStation: gasStation);
                 })
-              //MaterialPageRoute(builder: (context) => const DetailPage()),
             );
           },
         ),
@@ -244,8 +215,6 @@ void _onCameraMove(CameraPosition position) {
 
     );
 
-    print("Added marker");
-    print("Markers ${_markersMap.length}");
     setState(() {
       _markersMap[markerId] = marker;
     });
@@ -273,32 +242,15 @@ void _onCameraMove(CameraPosition position) {
 
   CameraPosition getInitialCameraPosition() {
 
-
-    _location.getLocation().then((l) {
+    LocationService.determinePosition().then((l) {
       var latitude = l.latitude;
       var longitude = l.longitude;
 
-      if (latitude != null && longitude != null) {
-
-        return CameraPosition(target: LatLng(latitude,longitude), zoom: 14);
-      }
-      return defaultPosition;
+      return CameraPosition(target: LatLng(latitude,longitude), zoom: 14);
     });
-
-
 
     return defaultPosition;
   }
-
-  Future<List<GasStation>> queryGasStationsForMap(double latitude, double longitude) async {
-
-
-    if (_listGasStations.isEmpty ) {
-      _listGasStations = await _api.queryGasStationsByAddress(latitude: latitude, longitude: longitude);
-    }
-    return _listGasStations;
-  }
-
 
   Future<Uint8List?> getBytesFromAsset({required String path}) async {
 
@@ -313,12 +265,5 @@ void _onCameraMove(CameraPosition position) {
     ))?.buffer.asUint8List();
 
   }
-
-
-
-
-
-
-  
 }
 
