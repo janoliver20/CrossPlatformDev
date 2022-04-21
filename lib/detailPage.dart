@@ -103,10 +103,17 @@ class DetailPage extends StatelessWidget {
 
 
 
-    final priceContentText = Text(
-      fuelName.toString()+ "                " + price.toString() + " €",
+    final priceContentText =
+    price.toString().isNotEmpty ?
+         Text(
+              fuelName.toString()+ "                " + price.toString() + " €",
+              style: TextStyle(fontSize: 18.0),
+            ):
+    Text(
+      "Kein Preis verfügbar",
       style: TextStyle(fontSize: 18.0),
     );
+
 
 
     final priceContent = Container(
@@ -401,7 +408,7 @@ class DetailPage extends StatelessWidget {
 
       body: SingleChildScrollView(
 
-          child: Column(
+          child: price.toString().isNotEmpty ? Column(
         //height: 100,
             children: [
               addressContent,
@@ -412,7 +419,19 @@ class DetailPage extends StatelessWidget {
             ],
 
 
-      ),
+      ) :
+          Column(
+            //height: 100,
+            children: [
+              addressContent,
+              priceContent,
+              openHourContent,
+              paymentContent,
+              contactContent
+            ],
+
+
+          ),
       ),
     );
   }
@@ -420,54 +439,13 @@ class DetailPage extends StatelessWidget {
 }
 
 
-/*
-open-closeContent,addressContent,priceContent, openHoursContent,paymentContent,contactContent
-
-child: Column(
-mainAxisAlignment: MainAxisAlignment.start,
-children: [
-Align(alignment: Alignment.topRight,),
-/*CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.transparent,
-              child: ClipOval( child: Image.asset("assets/images/"+name+".png",width: 100,
-                height: 100,
-                fit: BoxFit.cover,),
-              )
-            ),*/
-// Image.asset("assets/images/"+name+".png",width: 600,
-//   height: 240,
-//   fit: BoxFit.cover,),
-//Text(name.toString(),textAlign: TextAlign.center,style: const TextStyle(fontSize: 40,fontWeight: FontWeight.bold,letterSpacing: 5,shadows:[Shadow(color:Colors.black54, offset:Offset(1,2), blurRadius: 4 ) ]),),
-SizedBox(height: 40),
-Text("Address",textAlign:  TextAlign.left,style: const TextStyle(fontSize: 30,letterSpacing: 1,fontWeight: FontWeight.bold,fontFamily: 'Arial',fontStyle: FontStyle.normal),),
-SizedBox(height: 10),
-Text(address.toString(),textAlign: TextAlign.center,style: const TextStyle(fontSize: 20,letterSpacing: 1,fontWeight: FontWeight.bold,fontFamily: 'Arial',fontStyle: FontStyle.normal),),
-SizedBox(height: 40),
-Text("Tankstelle",style: const TextStyle(fontSize: 30,letterSpacing: 1,fontWeight: FontWeight.bold,fontFamily: 'Arial',fontStyle: FontStyle.normal),),
-SizedBox(height: 10),
-Text(name.toString(),textAlign: TextAlign.center,style: const TextStyle(fontSize: 20,letterSpacing: 1,fontWeight: FontWeight.bold,fontFamily: 'Arial',fontStyle: FontStyle.normal),),
-SizedBox(height: 40),
-Text("Preis",textAlign: TextAlign.center,style: const TextStyle(fontSize: 30,letterSpacing: 1,fontWeight: FontWeight.bold,fontFamily: 'Arial',fontStyle: FontStyle.normal),),
-SizedBox(height: 10),
-Text(fuelName.toString(),textAlign: TextAlign.center,style: const TextStyle(fontSize: 20,letterSpacing: 1,fontWeight: FontWeight.bold,fontFamily: 'Arial',fontStyle: FontStyle.normal),),
-SizedBox(height: 10),
-Text(price.toString() + " €",textAlign: TextAlign.center,style: const TextStyle(fontSize: 20,letterSpacing: 1,fontWeight: FontWeight.bold,fontFamily: 'Arial',fontStyle: FontStyle.normal),),
-SizedBox(height: 40),
-Text("Entfernung",textAlign: TextAlign.center,style: const TextStyle(fontSize: 30,letterSpacing: 1,fontWeight: FontWeight.bold,fontFamily: 'Arial',fontStyle: FontStyle.normal),),
-SizedBox(height: 10),
-Text(distance.toString() + " km",textAlign: TextAlign.center,style: const TextStyle(fontSize: 20,letterSpacing: 1,fontWeight: FontWeight.bold, fontFamily: 'Arial',fontStyle: FontStyle.normal),),
-
-],
-)
-*/
 class MapUtils {
 
   MapUtils._();
 
   static Future<void> openMap(double latitude, double longitude) async {
 
-    String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+    String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$longitude,$latitude';
     if (await canLaunch(googleUrl)) {
       await launch(googleUrl);
     } else {

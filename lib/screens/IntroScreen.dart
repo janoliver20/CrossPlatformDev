@@ -218,7 +218,7 @@ class _IntroScreenState extends State<IntroScreen> {
                         : null
                 );
                 Navigator.of(context)
-                    .pushReplacement(MaterialPageRoute(builder: (context) => const HomePage()));
+                    .pushReplacement(MaterialPageRoute(builder: (context) => const MyHomePage(title: 'MeFuel Homepage')));
               },
                   child: const Text('Get Started'),
                   style: TextButton.styleFrom(

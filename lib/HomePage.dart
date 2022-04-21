@@ -131,12 +131,8 @@ class _HomePageState extends State<HomePage> {
                               spacing: 0,
                               direction: Axis.horizontal,
                               children: <Widget>[
-                                // Text(
-                                //     store.gasStations[index].prices.isNotEmpty
-                                //         ? '${getFuelType(index)}'
-                                //         : ''
-                                //   ),
-                                Text(
+                              //Text(store.gasStations[index].prices.isNotEmpty ? '${getFuelType(index)}' : "--"),
+                              Text(
                                     store.gasStations[index].prices.isNotEmpty
                                       ? '${store.gasStations[index].prices[0].amount.toString()}'
                                       : '--',
@@ -153,12 +149,13 @@ class _HomePageState extends State<HomePage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) {
-                                  return DetailPage(
+                                  return store.gasStations[index].prices.isNotEmpty
+                                      ? DetailPage(
                                     name: store.gasStations[index].name.toString(),
-                                    price: store.gasStations[index].prices.isNotEmpty ? store.gasStations[index].prices[0].amount.toString() : "--",
+                                    price: store.gasStations[index].prices.isNotEmpty ? store.gasStations[index].prices[0].amount.toString() : '',
                                     distance: store.gasStations[index].distance?.toStringAsFixed(2) ?? "--",
                                     address: store.gasStations[index].location.address.toString(),
-                                    fuelName: getFuelType(index),
+                                    fuelName: getFuelType(index).isNotEmpty ? getFuelType(index) : "Keine Angaben",
                                     long: store.gasStations[index].location.longitude,
                                     lat: store.gasStations[index].location.latitude,
                                     dayOpen: store.gasStations[index].openingHours,
@@ -166,9 +163,24 @@ class _HomePageState extends State<HomePage> {
                                     contact: store.gasStations[index].contact,
                                     postalcode: store.gasStations[index].location.postalCode.toString(),
                                     city: store.gasStations[index].location.city.toString(),
-                                    );
+                                    ):
+                                  DetailPage(
+                                    name: store.gasStations[index].name.toString(),
+                                  price: store.gasStations[index].prices.isNotEmpty ? store.gasStations[index].prices[0].amount.toString() : '',
+                                  distance: store.gasStations[index].distance?.toStringAsFixed(2) ?? "--",
+                                  address: store.gasStations[index].location.address.toString(),
+                                  //fuelName: getFuelType(index).isNotEmpty ? getFuelType(index) : "Keine Angaben",
+                                  long: store.gasStations[index].location.longitude,
+                                  lat: store.gasStations[index].location.latitude,
+                                  dayOpen: store.gasStations[index].openingHours,
+                                  payment: store.gasStations[index].paymentMethods,
+                                  contact: store.gasStations[index].contact,
+                                  postalcode: store.gasStations[index].location.postalCode.toString(),
+                                  city: store.gasStations[index].location.city.toString(),
+                                  );
                                 })
                               );
+
                             },
                           ),
                         ),
@@ -195,15 +207,27 @@ class _HomePageState extends State<HomePage> {
 
     String getFuelType(int index){
     String fuelType ="";
-    fuelType = store.gasStations[index].prices[0].fuelType.toString();
+    if( store.gasStations[index].prices[0].fuelType.toString().isNotEmpty){
+      fuelType = store.gasStations[index].prices[0].fuelType.toString();
+    }else{
+      
+      fuelType = "--";
+    }
+
     if(fuelType == "FuelType.die"){
       fuelType = "Diesel: ";
+
     }else  if(fuelType == "FuelType.sup"){
       fuelType = "Super: ";
     }
     else  if(fuelType == "FuelType.gas"){
       fuelType = "Gas: ";
+    }else {
+
+      fuelType = "NO";
+
     }
+    print(fuelType);
     return fuelType;
     }
 
