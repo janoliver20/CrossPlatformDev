@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../main.dart';
+import '../stores/main_store.dart';
+
 class UserScreen extends StatefulWidget {
 
   const UserScreen({Key? key}) : super(key: key);
@@ -17,6 +20,15 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   int segmentedControlValue = 0;
+  final store = getIt<MainStore>();
+  final nameController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    nameController.dispose();
+    super.dispose();
+  }
 
   Widget segmentedControl() {
     return Container(
@@ -54,7 +66,7 @@ class _UserScreenState extends State<UserScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 40),
+
               CircleAvatar(
               radius: 50,
               backgroundColor: Colors.transparent,
@@ -63,14 +75,19 @@ class _UserScreenState extends State<UserScreen> {
                 fit: BoxFit.cover,),
               )
             ),
-              const SizedBox(height: 40),
-              const TextField(
+             // const SizedBox(height: 20),
+            //  Text(store.username.toString().isEmpty ? nameController.text : store.username.toString(),
+            //      style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'Robot',fontStyle: FontStyle.normal)),
+              const SizedBox(height: 20),
+              store.username.toString().isEmpty ? TextField(
+                controller: nameController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Name',
+                  hintText: 'Enter new name',
                 )
-              ),
-              const SizedBox(height: 40),
+              ) : Text(store.username.toString(),
+                  style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'Robot',fontStyle: FontStyle.normal)),
+              const SizedBox(height: 20),
               const Align(
               alignment: Alignment.centerLeft,
               child: Text(
