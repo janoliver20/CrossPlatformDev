@@ -21,10 +21,11 @@ class DetailScreen extends StatelessWidget {
           style: const TextStyle(color: Colors.white, fontSize: 18.0),
         ),
         const SizedBox(height: 4.0),
-       Text(
-         gasStation.location.postalCode.toString() + " " + gasStation.location.city.toString() ,
+        Text(
+          gasStation.location.postalCode.toString() + " " +
+              gasStation.location.city.toString(),
           style: const TextStyle(color: Colors.white),
-       ),
+        ),
 
         const SizedBox(height: 4.0),
         Row(
@@ -66,14 +67,18 @@ class DetailScreen extends StatelessWidget {
             )
         ),
         Container(
-            height: MediaQuery.of(context).size.height * 0.3,
-            padding: const EdgeInsets.all(40.0),
-            width: MediaQuery
-                .of(context)
-                .size
-                .width,
-            decoration: const BoxDecoration(color: Color.fromRGBO(58, 66, 86, .9)),
-          ),
+          height: MediaQuery
+              .of(context)
+              .size
+              .height * 0.3,
+          padding: const EdgeInsets.all(40.0),
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
+          decoration: const BoxDecoration(
+              color: Color.fromRGBO(58, 66, 86, .9)),
+        ),
         Positioned(
           left: 16.0,
           bottom: 16.0,
@@ -88,9 +93,11 @@ class DetailScreen extends StatelessWidget {
           bottom: 16.0,
           child: InkWell(
             onTap: () {
-              MapUtils.openMap(gasStation.location.longitude, gasStation.location.latitude);
+              MapUtils.openMap(
+                  gasStation.location.longitude, gasStation.location.latitude);
             },
-            child: const Icon(Icons.assistant_navigation, color: Colors.white, size: 45),
+            child: const Icon(
+                Icons.assistant_navigation, color: Colors.white, size: 45),
           ),
         ),
       ],
@@ -101,13 +108,19 @@ class DetailScreen extends StatelessWidget {
         itemCount: gasStation.prices.length,
         itemBuilder: (context, index) {
           return ListTile(
-            leading: Text( getFuelType(index).toString(), style: const TextStyle(fontSize: 18.0) ),
-            trailing: Text( gasStation.prices[index].amount.toString() + " €/l", style: const TextStyle(fontSize: 18.0) ),
+            leading: Text(getFuelTypeName(gasStation.prices[index].fuelType),
+                style: const TextStyle(fontSize: 18.0)),
+            trailing: Text(gasStation.prices[index].amount.toString() + " €/l",
+                style: const TextStyle(fontSize: 18.0)),
           );
-        }) : const Text( Strings.gasStationDetail_noPrices, style: TextStyle(fontSize: 18.0) );
+        }) : const Text(
+        Strings.gasStationDetail_noPrices, style: TextStyle(fontSize: 18.0));
 
     final priceContent = Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
       padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
 
       child: Column(
@@ -123,7 +136,8 @@ class DetailScreen extends StatelessWidget {
                       ExpansionTile(
                         title: const Text(
                           Strings.gasStationDetail_prices_title,
-                          style: TextStyle( fontSize: 18.0, fontWeight: FontWeight.bold ),
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.bold),
                         ),
                         children: [
                           priceContentText
@@ -140,7 +154,10 @@ class DetailScreen extends StatelessWidget {
     );
 
     final openHourContent = Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
       padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
 
       child: Column(
@@ -149,30 +166,35 @@ class DetailScreen extends StatelessWidget {
           Row(
             children: <Widget>[
               Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      ExpansionTile(
-                        title: const Text(
-                          Strings.gasStationDetail_openingHours_title,
-                          style: TextStyle( fontSize: 18.0, fontWeight: FontWeight.bold ),
-                        ),
-                        children: [
-                          ListView.builder(
-                              shrinkWrap: true,
-                              itemExtent: 32,
-                              itemCount: gasStation.openingHours.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  leading: Text( gasStation.openingHours[index].day ),
-                                  trailing: Text( gasStation.openingHours[index].from + "-" + gasStation.openingHours[index].to ),
-                                  contentPadding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
-                                  dense:true,
-                                );
-                              })
-                        ],
+                child: Column(
+                  children: <Widget>[
+                    ExpansionTile(
+                      title: const Text(
+                        Strings.gasStationDetail_openingHours_title,
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
-                    ],
-                  ),
+                      children: [
+                        ListView.builder(
+                            shrinkWrap: true,
+                            itemExtent: 32,
+                            itemCount: gasStation.openingHours.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                leading: Text(
+                                    gasStation.openingHours[index].day),
+                                trailing: Text(
+                                    gasStation.openingHours[index].from + "-" +
+                                        gasStation.openingHours[index].to),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 0.0, horizontal: 16.0),
+                                dense: true,
+                              );
+                            })
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -182,7 +204,10 @@ class DetailScreen extends StatelessWidget {
 
     final paymentContent = Container(
       // height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
       // color: Theme.of(context).primaryColor,
       padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
 
@@ -199,26 +224,39 @@ class DetailScreen extends StatelessWidget {
                       ExpansionTile(
                         title: const Text(
                           Strings.gasStationDetail_paymentMethods_title,
-                          style: TextStyle( fontSize: 18.0, fontWeight: FontWeight.bold ),
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.bold),
                         ),
                         children: <Widget>[
                           ListTile(
-                            title: const Text( Strings.gasStationDetail_paymentMethods_cash ),
+                            title: const Text(
+                                Strings.gasStationDetail_paymentMethods_cash),
                             leading: gasStation.paymentMethods.cash == true ?
-                            const Icon(Icons.check_circle, color: Colors.green, size: 25) :
-                            const Icon(Icons.do_not_disturb, color: Colors.red, size: 25),
+                            const Icon(Icons.check_circle, color: Colors.green,
+                                size: 25) :
+                            const Icon(Icons.do_not_disturb, color: Colors.red,
+                                size: 25),
                           ),
                           ListTile(
-                            title: const Text( Strings.gasStationDetail_paymentMethods_creditCard ),
-                            leading: gasStation.paymentMethods.creditCard == true ?
-                            const Icon(Icons.check_circle, color: Colors.green, size: 25) :
-                            const Icon(Icons.do_not_disturb, color: Colors.red, size: 25),
+                            title: const Text(Strings
+                                .gasStationDetail_paymentMethods_creditCard),
+                            leading: gasStation.paymentMethods.creditCard ==
+                                true ?
+                            const Icon(Icons.check_circle, color: Colors.green,
+                                size: 25) :
+                            const Icon(Icons.do_not_disturb, color: Colors.red,
+                                size: 25),
                           ),
                           ListTile(
-                            title: const Text( Strings.gasStationDetail_paymentMethods_debitCard ),
-                            leading: gasStation.paymentMethods.debitCard == true ?
-                            const Icon(Icons.check_circle, color: Colors.green, size: 25) :
-                            const Icon(Icons.do_not_disturb, color: Colors.red, size: 25),
+                            title: const Text(Strings
+                                .gasStationDetail_paymentMethods_debitCard),
+                            leading: gasStation.paymentMethods.debitCard == true
+                                ?
+                            const Icon(Icons.check_circle, color: Colors.green,
+                                size: 25)
+                                :
+                            const Icon(Icons.do_not_disturb, color: Colors.red,
+                                size: 25),
                           ),
                         ],
                       ),
@@ -233,7 +271,10 @@ class DetailScreen extends StatelessWidget {
     );
 
     final contactContent = Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
       // color: Theme.of(context).primaryColor,
       padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
 
@@ -250,20 +291,31 @@ class DetailScreen extends StatelessWidget {
                       ExpansionTile(
                         title: const Text(
                           Strings.gasStationDetail_contact_title,
-                          style: TextStyle( fontSize: 18.0, fontWeight: FontWeight.bold ),
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.bold),
                         ),
                         children: <Widget>[
                           ListTile(
-                            leading: const Text(Strings.gasStationDetail_contact_telephone),
-                            trailing: gasStation.contact?.telephone == null ?  const Text( "-" ) : Text( gasStation.contact!.telephone.toString() ),
+                            leading: const Text(
+                                Strings.gasStationDetail_contact_telephone),
+                            trailing: gasStation.contact?.telephone == null
+                                ? const Text("-")
+                                : Text(
+                                gasStation.contact!.telephone.toString()),
                           ),
                           ListTile(
-                            leading: const Text(Strings.gasStationDetail_contact_mail),
-                            trailing: gasStation.contact?.mail == null ? const Text( "-" ) : Text( gasStation.contact!.mail.toString()),
+                            leading: const Text(
+                                Strings.gasStationDetail_contact_mail),
+                            trailing: gasStation.contact?.mail == null
+                                ? const Text("-")
+                                : Text(gasStation.contact!.mail.toString()),
                           ),
                           ListTile(
-                            leading: const Text(Strings.gasStationDetail_contact_web),
-                            trailing: gasStation.contact?.website == null ? const Text( "-" ) : Text( gasStation.contact!.website.toString() ),
+                            leading: const Text(
+                                Strings.gasStationDetail_contact_web),
+                            trailing: gasStation.contact?.website == null
+                                ? const Text("-")
+                                : Text(gasStation.contact!.website.toString()),
                           ),
                         ],
                       ),
@@ -285,34 +337,20 @@ class DetailScreen extends StatelessWidget {
 
       body: SingleChildScrollView(
         child:
-          Column(
-            //height: 100,
-            children: [
-              addressContent,
-              priceContent,
-              openHourContent,
-              paymentContent,
-              contactContent
-            ],
-          ),
+        Column(
+          //height: 100,
+          children: [
+            addressContent,
+            priceContent,
+            openHourContent,
+            paymentContent,
+            contactContent
+          ],
+        ),
       ),
     );
   }
-
-  String getFuelType(int index){
-    FuelType fuelType = gasStation.prices[index].fuelType;
-
-    if(fuelType == FuelType.die){
-      return Strings.gasStationDetail_fuelType_diesel;
-    } else  if(fuelType == FuelType.sup){
-      return Strings.gasStationDetail_fuelType_super;
-    } else  if(fuelType == FuelType.gas){
-      return Strings.gasStationDetail_fuelType_gas;
-    }
-    return "-";
-  }
 }
-
 
 class MapUtils {
   MapUtils._();

@@ -8,8 +8,24 @@ class Strings {
   static const String bottom_user_screen = "User";
 
   /*---------------
+    Gas Station
+   ---------------*/
+  static const String fuelType_diesel = "Diesel";
+  static const String fuelType_super = "Super";
+  static const String fuelType_gas = "Gas";
+
+
+  /*---------------
     Intro Screens
    ---------------*/
+  static const String intro_welcome_title = "Welcome to MeFuel!";
+  static const String intro_welcome_text = "We would like to ask you a few questions to enhance your experience";
+  static const String intro_name_question = "What is your name?";
+  static const String intro_name_placeholder = "Enter your name";
+  static const String intro_fuelType_question = "What type fuel does you car need?";
+  static const String intro_get_started = "Get Started";
+  static const String intro_skip = "Skip";
+  static const String intro_next = "Next";
 
   /*---------------
     List Screen
@@ -43,10 +59,6 @@ class Strings {
   static const String gasStationDetail_paymentMethods_cash = "Cash";
   static const String gasStationDetail_paymentMethods_creditCard = "Credit Card";
   static const String gasStationDetail_paymentMethods_debitCard = "Debit Card";
-
-  static const String gasStationDetail_fuelType_diesel = "Diesel";
-  static const String gasStationDetail_fuelType_super = "Super";
-  static const String gasStationDetail_fuelType_gas = "Gas";
 
   static const String gasStationDetail_contact_telephone = "Telephone";
   static const String gasStationDetail_contact_mail = "Mail";

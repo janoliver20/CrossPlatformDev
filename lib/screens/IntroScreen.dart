@@ -1,4 +1,4 @@
-import 'package:Me_Fuel/screens/GasStationListScreen.dart';
+import 'package:Me_Fuel/Strings.dart';
 import 'package:Me_Fuel/main.dart';
 import 'package:Me_Fuel/models/GasStation.dart';
 import 'package:Me_Fuel/stores/main_store.dart';
@@ -53,24 +53,26 @@ class _IntroScreenState extends State<IntroScreen> {
                 Container(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    children: const [
                       Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Text("Welcome to MeFuel!",
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          Strings.intro_welcome_title,
                           style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Text("We would like to ask you a few questions to enhance your experience",
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          Strings.intro_welcome_text,
                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white, ),
                           textAlign: TextAlign.center,
                         ),
                       )
                     ],
                   ),
-                  decoration: new BoxDecoration(
+                  decoration: BoxDecoration(
                       color: Colors.blue,
                       borderRadius: BorderRadius.circular(40)
                   ),
@@ -80,9 +82,10 @@ class _IntroScreenState extends State<IntroScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Text("What is your name?",
+                        const Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            Strings.intro_name_question,
                             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
                             textAlign: TextAlign.center,
                           ),
@@ -91,20 +94,20 @@ class _IntroScreenState extends State<IntroScreen> {
                           padding: const EdgeInsets.all(20),
                           child: TextField(
                             controller: _usernameController,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.white, width: 1)
+                                borderSide: BorderSide(color: Colors.white, width: 1)
                               ),
-                              hintText: 'Enter your name',
+                              hintText: Strings.intro_name_placeholder,
                               hintStyle: TextStyle(color: Colors.white70, fontSize: 16)
                             ),
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            style: const TextStyle(color: Colors.white, fontSize: 16),
                             textAlign: TextAlign.center,
                           ),
                         )
                       ],
                     ),
-                  decoration: new BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(40),
                   ),
@@ -114,9 +117,10 @@ class _IntroScreenState extends State<IntroScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Text("What type fuel does you car need?",
+                      const Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          Strings.intro_fuelType_question,
                           style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
@@ -131,7 +135,7 @@ class _IntroScreenState extends State<IntroScreen> {
                               final item = FuelType.values[index];
                               return Card(
                                 shape: RoundedRectangleBorder(
-                                  side: BorderSide(
+                                  side: const BorderSide(
                                     color: Colors.white,
                                   ),
                                   borderRadius: BorderRadius.circular(10.0),
@@ -143,7 +147,7 @@ class _IntroScreenState extends State<IntroScreen> {
                                     children: [
                                       Text(
                                         getFuelTypeName(item),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold
@@ -166,7 +170,7 @@ class _IntroScreenState extends State<IntroScreen> {
                       )
                     ],
                   ),
-                  decoration: new BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(40),
                   ),
@@ -184,7 +188,7 @@ class _IntroScreenState extends State<IntroScreen> {
             children: [
               TextButton(
                   onPressed: () => controller.jumpToPage(pageCount),
-                  child: const Text("Skip"),
+                  child: const Text(Strings.intro_skip),
                   style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)
@@ -198,7 +202,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 child: SmoothPageIndicator(
                   controller: controller,
                   count: 3,
-                  effect: ExpandingDotsEffect(
+                  effect: const ExpandingDotsEffect(
                       spacing: 16,
                       dotColor: Colors.black26,
                       dotHeight: 8,
@@ -220,7 +224,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 Navigator.of(context)
                     .pushReplacement(MaterialPageRoute(builder: (context) => const MyHomePage(title: 'MeFuel Homepage')));
               },
-                  child: const Text('Get Started'),
+                  child: const Text(Strings.intro_get_started),
                   style: TextButton.styleFrom(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)
@@ -232,7 +236,7 @@ class _IntroScreenState extends State<IntroScreen> {
                   onPressed: () => controller.nextPage(
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.easeInOut),
-                  child: const Text("Next"),
+                  child: const Text(Strings.intro_next),
                   style: TextButton.styleFrom(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)
