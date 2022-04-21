@@ -22,12 +22,20 @@ class _UserScreenState extends State<UserScreen> {
   int segmentedControlValue = 0;
   final store = getIt<MainStore>();
   final nameController = TextEditingController();
+  String userName = "no Name";
+
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     nameController.dispose();
     super.dispose();
+  }
+
+  String changeName(){
+    String newName = "";
+
+    return newName;
   }
 
   Widget segmentedControl() {
@@ -83,7 +91,7 @@ class _UserScreenState extends State<UserScreen> {
                 controller: nameController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Enter new name',
+                  hintText: 'Change username',
                 )
               ) : Text(store.username.toString(),
                   style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'Robot',fontStyle: FontStyle.normal)),
@@ -98,12 +106,16 @@ class _UserScreenState extends State<UserScreen> {
               segmentedControl(),
               const SizedBox(height: 40),
               const SizedBox( width: 200,
-                  child: ElevatedButton(onPressed: null, child: Text('SAVE'))
-              ),
+                      child: ElevatedButton(onPressed: null, child: Text('SAVE'))
+                  ),
+
+
         ]
           )
 
       ),
     );
+
   }
+
 }

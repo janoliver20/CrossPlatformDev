@@ -6,6 +6,8 @@ import 'dart:convert';
 
 import 'dart:developer';
 
+import 'package:Me_Fuel/Strings.dart';
+
 enum FuelType {
   die,
   sup,
@@ -28,11 +30,11 @@ String getFuelTypeName(FuelType type)
 {
   switch(type) {
     case FuelType.sup:
-      return "Super";
+      return Strings.fuelType_super;
     case FuelType.gas:
-      return "Gas";
+      return Strings.fuelType_gas;
     case FuelType.die:
-      return "Diesel";
+      return Strings.fuelType_diesel;
   }
 }
 
