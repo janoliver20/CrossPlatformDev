@@ -10,7 +10,6 @@ import 'package:Me_Fuel/stores/main_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:google_geocoding/google_geocoding.dart';
 import 'package:google_maps_webservice/places.dart' as places;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as mapLocation;
@@ -31,10 +30,10 @@ import '../main.dart';
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
 
-  
+
   @override
   State<MapScreen> createState() => MapScreenState();
-  
+
 }
 
 class MapScreenState extends State<MapScreen> {
@@ -42,15 +41,11 @@ class MapScreenState extends State<MapScreen> {
   static const CameraPosition defaultPosition = CameraPosition(target: LatLng(48.36784132608749, 14.514988624961328), zoom: 14);
   late GoogleMapController _controller;
   mapLocation.Location _location = mapLocation.Location();
-  late StreamSubscription _locationSubscription;
-  late bool _serviceEnabled;
-  late mapLocation.PermissionStatus _permissionGranted;
   final EControlAPI _api = EControlAPI();
   List<GasStation> _listGasStations = List.empty();
   Map<MarkerId, Marker> _markersMap = {};
   final key = "AIzaSyBGmu809RbXJiJ6sLz8wxlj_BLmY7Re8bI";
   late places.GoogleMapsPlaces _places;
-  late GoogleGeocoding _geocoding;
   bool _navigationButtonEnabled = false;
 
 
@@ -62,7 +57,6 @@ class MapScreenState extends State<MapScreen> {
     // TODO: implement initState
     super.initState();
     _places = places.GoogleMapsPlaces(apiKey: key);
-    _geocoding = GoogleGeocoding(key);
   }
 
   void _onMapCreated(GoogleMapController controller){
@@ -107,7 +101,7 @@ void _onCameraMove(CameraPosition position) {
 }
 
 
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -182,24 +176,14 @@ void _onCameraMove(CameraPosition position) {
       var detail = await _places.getDetailsByPlaceId(placeId);
       var lat = detail.result.geometry?.location.lat;
       var long = detail.result.geometry?.location.lng;
+      
+      if (lat != null && long != null) {
+        _controller.animateCamera(
+            CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(lat, long), zoom: 14))
+        );
 
-      var address = await _geocoding.geocoding.getReverse(LatLon(lat!, long!));
-
-      _controller.animateCamera(
-        CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(lat, long), zoom: 14))
-      );
-
-      store.getGasStationAtLocation(lat, long, listOption: GasStationListOperationOption.append);
-
-      //store.gasStations.isNotEmpty ? addMarkerToList(store.gasStations) : print("No gasstations found");
-
-
-      /*queryGasStationsForMap(lat, long).then((stations) {
-        addMarkerToList(stations);
-      });*/
-
-      print(lat);
-      print(long);
+        store.getGasStationAtLocation(lat, long, listOption: GasStationListOperationOption.append);
+      }
     }
   }
 
@@ -313,30 +297,6 @@ void _onCameraMove(CameraPosition position) {
       _listGasStations = await _api.queryGasStationsByAddress(latitude: latitude, longitude: longitude);
     }
     return _listGasStations;
-  }
-
-  Future<void> setLocationChangedListener(void Function(mapLocation.LocationData event)? onLocationChanged) async {
-
-
-    _serviceEnabled = await _location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await _location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
-
-    _permissionGranted = await _location.hasPermission();
-    if (_permissionGranted == mapLocation.PermissionStatus.denied) {
-      _permissionGranted = await _location.requestPermission();
-      if (_permissionGranted != mapLocation.PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    _locationSubscription = _location.onLocationChanged.listen(onLocationChanged);
-
   }
 
 
