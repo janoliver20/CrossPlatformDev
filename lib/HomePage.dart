@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
             TextField(
               onChanged: (value) => _runFilter(value),
               decoration: const InputDecoration(
-                  labelText: 'Search', suffixIcon: Icon(Icons.search)),
+                  labelText: 'Search...', suffixIcon: Icon(Icons.search)),
             ),
 
             const SizedBox(
