@@ -23,6 +23,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
 
+import '../Strings.dart';
 import '../detailPage.dart';
 import '../main.dart';
 
@@ -77,13 +78,12 @@ class MapScreenState extends State<MapScreen> {
       }
     }).onError((error, stackTrace) {
       showDialog(context: context, builder: (context) => AlertDialog(
-        title: Text("User Location required to display nearby gas stations"),
-        content: Text("Click on button below to open app settings and enable location during use of app.\n"
-            "Afterwards please restart app."),
+        title: const Text(Strings.map_location_required_title),
+        content: const Text(Strings.map_location_required_content),
         actions: [
           TextButton(onPressed: () {
             pm.openAppSettings();
-          }, child: Text("Open App Settings"))
+          }, child: const Text(Strings.map_location_required_opensettings))
         ],
       ),
       barrierDismissible: false);
@@ -106,7 +106,7 @@ void _onCameraMove(CameraPosition position) {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search for location ...'),
+        title: const Text(Strings.map_appbar_tite),
         actions: [
           IconButton(
             onPressed: () async {
