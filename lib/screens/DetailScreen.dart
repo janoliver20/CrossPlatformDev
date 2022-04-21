@@ -204,10 +204,7 @@ class DetailScreen extends StatelessWidget {
 
     final paymentContent = Container(
       // height: MediaQuery.of(context).size.height,
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
+      width: MediaQuery.of(context).size.width,
       // color: Theme.of(context).primaryColor,
       padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
 

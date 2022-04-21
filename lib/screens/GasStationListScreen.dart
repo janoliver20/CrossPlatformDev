@@ -1,3 +1,4 @@
+import 'package:Me_Fuel/models/GasStation.dart';
 import 'package:Me_Fuel/stores/main_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -91,7 +92,7 @@ class _GasStationListScreenState extends State<GasStationListScreen> {
                           padding: const EdgeInsets.all(0.0),
                           child: ListTile(
                             title:  Text(
-                                '${store.gasStations[index].name}'.truncate(16),
+                                store.gasStations[index].name.truncate(15),
                                 textAlign: TextAlign.left,
                                 style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'Robot',fontStyle: FontStyle.normal)
                             ),
@@ -99,26 +100,34 @@ class _GasStationListScreenState extends State<GasStationListScreen> {
                               spacing: 8,
                               children: <Widget>[
                                 Text('${store.gasStations[index].distance?.toStringAsFixed(2) ?? "--"} km'),
-                                Text('${store.gasStations[index].location.city.toString()}'.truncate(26),
+                                Text(store.gasStations[index].location.city.toString().truncate(26),
                                   textScaleFactor: 1,
                                 ),
                               ],
                             ),
                             trailing: Wrap(
-                              spacing: 0,
+                              spacing: 4,
                               direction: Axis.horizontal,
                               children: <Widget>[
                               Text(
-                                    store.gasStations[index].prices.isNotEmpty
-                                      ? '${store.gasStations[index].prices[0].amount.toString()}'
-                                      : '-',
+                                   getPriceForStandardFuelType(index),
                                     textScaleFactor: 1,
-                                    style: const TextStyle(fontSize: 42,fontWeight: FontWeight.normal,fontFamily: 'Robot',fontStyle: FontStyle.normal)
+                                    style: const TextStyle(fontSize: 38,fontWeight: FontWeight.normal,fontFamily: 'Robot',fontStyle: FontStyle.normal)
                                   ),
-                                const Text(
-                                  '€/l',
-                                  textScaleFactor: 1,
-                                ),
+                              Wrap(
+                                spacing: 8,
+                                direction: Axis.vertical,
+                                children: <Widget>[
+                                  const Text(
+                                    '€/l',
+                                    textScaleFactor: 1,
+                                  ),
+                                  Text(
+                                    getFuelType(store.standardFuelType),
+                                    textScaleFactor: 1,
+                                  ),
+                                  ],
+                              ),
                               ],
                             ),
                             onTap: () {
@@ -158,10 +167,20 @@ class _GasStationListScreenState extends State<GasStationListScreen> {
         break;
       case 2:
         store.sortGasStationsBy(Sort.distance);
-
-
     }
   }
+
+  String getPriceForStandardFuelType(int index) {
+    if (store.gasStations[index].prices.isNotEmpty) {
+      for (var price in store.gasStations[index].prices) {
+        if (price.fuelType == store.standardFuelType){
+          return price.amount.toString();
+        }
+      }
+    }
+    return "-";
+  }
+
 }
 
 extension StringExtension on String {

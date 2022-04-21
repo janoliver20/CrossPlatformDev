@@ -219,7 +219,7 @@ class _IntroScreenState extends State<IntroScreen> {
                     name: _usernameController.text,
                     fuelType: _selectedListIndex > -1 && _selectedListIndex < FuelType.values.length
                         ? FuelType.values[_selectedListIndex]
-                        : null
+                        : FuelType.values[0]
                 );
                 Navigator.of(context)
                     .pushReplacement(MaterialPageRoute(builder: (context) => const MyHomePage(title: 'MeFuel Homepage')));

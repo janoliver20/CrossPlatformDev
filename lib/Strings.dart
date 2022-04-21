@@ -51,6 +51,7 @@ class Strings {
   /*---------------
     User Screen
    ---------------*/
+  static const String user_settings_title = "User Settings";
 
   /*---------------
     Detail Screen
