@@ -29,19 +29,20 @@ class MapScreen extends StatefulWidget {
 
 class MapScreenState extends State<MapScreen> {
 
-  static const CameraPosition defaultPosition = CameraPosition(target: LatLng(48.36784132608749, 14.514988624961328), zoom: 14);
+  static const CameraPosition _defaultPosition = CameraPosition(target: LatLng(48.36784132608749, 14.514988624961328), zoom: 14);
   final Map<MarkerId, Marker> _markersMap = {};
-  final key = "AIzaSyBGmu809RbXJiJ6sLz8wxlj_BLmY7Re8bI";
+  final _key = "AIzaSyBGmu809RbXJiJ6sLz8wxlj_BLmY7Re8bI";
   late places.GoogleMapsPlaces _places;
   late GoogleMapController _controller;
+  final _store = getIt<MainStore>();
   bool _navigationButtonEnabled = false;
   GasStation? _selectedGasStation;
-  final store = getIt<MainStore>();
+
 
   @override
   void initState() {
     super.initState();
-    _places = places.GoogleMapsPlaces(apiKey: key);
+    _places = places.GoogleMapsPlaces(apiKey: _key);
   }
 
   void _onMapCreated(GoogleMapController controller){
@@ -57,7 +58,7 @@ class MapScreenState extends State<MapScreen> {
           )
       );
 
-      store.getGasStationsAtCurrentLocation();
+      _store.getGasStationsAtCurrentLocation();
 
     }).onError((error, stackTrace) {
       showDialog(context: context, builder: (context) => AlertDialog(
@@ -77,7 +78,7 @@ void _onCameraMove(CameraPosition position) {
 
     var cameraPosition = position.target;
     if (position.zoom >= 10){
-      store.getGasStationAtLocation(cameraPosition.latitude, cameraPosition.longitude);
+      _store.getGasStationAtLocation(cameraPosition.latitude, cameraPosition.longitude);
     }
 
 }
@@ -90,7 +91,7 @@ void _onCameraMove(CameraPosition position) {
         actions: [
           IconButton(
             onPressed: () async {
-             places.Prediction? p = await PlacesAutocomplete.show(context: context, apiKey: key,
+             places.Prediction? p = await PlacesAutocomplete.show(context: context, apiKey: _key,
                  types: ["(cities)"], components: [places.Component(places.Component.country, "aut")], strictbounds: false);
 
              displayPrediction(p);
@@ -101,7 +102,7 @@ void _onCameraMove(CameraPosition position) {
         ]
       ),
       body: Observer(builder: (_) {
-        store.gasStations.isNotEmpty ? addMarkerToList(store.gasStations) : print(Strings.list_no_result);
+        _store.gasStations.isNotEmpty ? addMarkerToList(_store.gasStations) : print(Strings.list_no_result);
         return Stack(
           children: <Widget>[
             GoogleMap(
@@ -164,7 +165,7 @@ void _onCameraMove(CameraPosition position) {
             CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(lat, long), zoom: 14))
         );
 
-        store.getGasStationAtLocation(lat, long, listOption: GasStationListOperationOption.append);
+        _store.getGasStationAtLocation(lat, long, listOption: GasStationListOperationOption.append);
       }
     }
   }
@@ -248,7 +249,7 @@ void _onCameraMove(CameraPosition position) {
       return CameraPosition(target: LatLng(latitude,longitude), zoom: 14);
     });
 
-    return defaultPosition;
+    return _defaultPosition;
   }
 
   Future<Uint8List?> getBytesFromAsset({required String path}) async {
