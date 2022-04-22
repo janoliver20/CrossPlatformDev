@@ -141,9 +141,12 @@ void _onCameraMove(CameraPosition position) {
   }
 
   Future<void> openMap(double latitude, double longitude) async {
-    String googleUrl = 'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude&travelmode=driving';
+    String googleUrl = 'comgooglemaps://?daddr=$latitude,$longitude';
+    String appleMapsUrl = 'http://maps.apple.com/?daddr=$latitude,$longitude&dirflg=d&t=h';
     if (await canLaunch(googleUrl)) {
       await launch(googleUrl);
+    } else if (await canLaunch(appleMapsUrl)) {
+      await launch(appleMapsUrl);
     } else {
       throw 'Could not open the map.';
     }
