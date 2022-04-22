@@ -353,9 +353,12 @@ class MapUtils {
   MapUtils._();
 
   static Future<void> openMap(double latitude, double longitude) async {
-    String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$longitude,$latitude';
+    String googleUrl = 'comgooglemaps://?daddr=$latitude,$longitude';
+    String appleMapsUrl = 'http://maps.apple.com/?daddr=$latitude,$longitude&dirflg=d&t=h';
     if (await canLaunch(googleUrl)) {
       await launch(googleUrl);
+    } else if (await canLaunch(appleMapsUrl)) {
+      await launch(appleMapsUrl);
     } else {
       throw 'Could not open the map.';
     }
