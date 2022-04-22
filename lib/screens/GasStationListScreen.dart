@@ -22,12 +22,6 @@ class _GasStationListScreenState extends State<GasStationListScreen> {
   final TextEditingController _filter = TextEditingController();
   final store = getIt<MainStore>();
 
-  @override
-  initState() {
-    store.getGasStationsAtCurrentLocation();
-    super.initState();
-  }
-
   // This function is called whenever the text field changes
   void _runFilter(String enteredKeyword) {
     List<Map<String,dynamic>> results = [];//List<Map<String, dynamic>> results = [];
@@ -163,7 +157,7 @@ class _GasStationListScreenState extends State<GasStationListScreen> {
         store.sortGasStationsBy(Sort.name);
         break;
       case 1:
-        store.sortGasStationsBy(Sort.price);
+        store.sortGasStationsBy(Sort.price, fuelType: store.standardFuelType);
         break;
       case 2:
         store.sortGasStationsBy(Sort.distance);
@@ -185,8 +179,8 @@ class _GasStationListScreenState extends State<GasStationListScreen> {
 
 extension StringExtension on String {
   String truncate(maxLength) {
-    if (this.length <= maxLength) { return this; }
-    return replaceRange(maxLength, this.length, "...");
+    if (length <= maxLength) { return this; }
+    return replaceRange(maxLength, length, "...");
   }
 }
 

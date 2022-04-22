@@ -5,7 +5,6 @@ import 'package:Me_Fuel/models/RegionUnit.dart';
 import 'package:Me_Fuel/services/e-control/e-control_api.dart';
 import 'package:Me_Fuel/services/e-control/gasstation_fuel_merge.service.dart';
 import 'package:Me_Fuel/services/location.service.dart';
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -150,7 +149,6 @@ abstract class _MainStore with Store {
                 gasStations.addAll(gasStationList);
                   })
               .catchError((err) => _error = err)
-
     })
         .catchError((err) => _error = err)
         .whenComplete(() => _isLoading = false);
@@ -186,12 +184,15 @@ abstract class _MainStore with Store {
             return a.name.compareTo(b.name) * (asc ? 1 : -1);
           case Sort.price:
             if (fuelType != null) {
-              return a.prices
-                  .firstWhere((element) => element.fuelType == fuelType)
-                  .amount
-                  .compareTo(b.prices
-                  .firstWhere((element) => element.fuelType == fuelType)
-                  .amount) * (asc ? 1 : -1);
+              if (a.prices.any((element) => element.fuelType == fuelType)) {
+                return a.prices
+                    .firstWhere((element) => element.fuelType == fuelType)
+                    .amount
+                    .compareTo(b.prices
+                    .firstWhere((element) => element.fuelType == fuelType)
+                    .amount) * (asc ? 1 : -1);
+              }
+              return -1 * (asc ? 1:-1);
             }
             return (a.prices.isNotEmpty ? a.prices[0].amount : double.maxFinite)
                 .compareTo(b.prices.isNotEmpty ? b.prices[0].amount : double.maxFinite) * (asc ? 1 : -1);
