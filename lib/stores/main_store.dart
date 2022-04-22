@@ -39,7 +39,7 @@ abstract class _MainStore with Store {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     _hasAlreadyReadIntro = preferences.getBool('firstTime') ?? false;
     _standardFuelType = FuelType.values[preferences.getInt("fuelType") ?? 0];
-    _username = preferences.getString('username') ?? null;
+    _username = preferences.getString('username');
   }
 
   @observable
