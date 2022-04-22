@@ -34,6 +34,8 @@
 	<string></string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>MeFuel needs your location to display the map properly.</string>
+    <key>NSLocationUsageDescription</key>
+    <string>MeFuel needs you location to locate the gas stations in your area.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>

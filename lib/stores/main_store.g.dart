@@ -42,8 +42,8 @@ mixin _$MainStore on _MainStore, Store {
           Computed<String?>(() => super.username, name: '_MainStore.username'))
       .value;
 
-  final _$_hasAlreadyReadIntroAtom =
-      Atom(name: '_MainStore._hasAlreadyReadIntro');
+  late final _$_hasAlreadyReadIntroAtom =
+      Atom(name: '_MainStore._hasAlreadyReadIntro', context: context);
 
   @override
   bool get _hasAlreadyReadIntro {
@@ -59,7 +59,8 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
-  final _$_standardFuelTypeAtom = Atom(name: '_MainStore._standardFuelType');
+  late final _$_standardFuelTypeAtom =
+      Atom(name: '_MainStore._standardFuelType', context: context);
 
   @override
   FuelType get _standardFuelType {
@@ -74,7 +75,8 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
-  final _$_usernameAtom = Atom(name: '_MainStore._username');
+  late final _$_usernameAtom =
+      Atom(name: '_MainStore._username', context: context);
 
   @override
   String? get _username {
@@ -89,7 +91,8 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
-  final _$_sortOptionAtom = Atom(name: '_MainStore._sortOption');
+  late final _$_sortOptionAtom =
+      Atom(name: '_MainStore._sortOption', context: context);
 
   @override
   Sort get _sortOption {
@@ -104,7 +107,8 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
-  final _$_sortFuelTypeAtom = Atom(name: '_MainStore._sortFuelType');
+  late final _$_sortFuelTypeAtom =
+      Atom(name: '_MainStore._sortFuelType', context: context);
 
   @override
   FuelType? get _sortFuelType {
@@ -119,7 +123,8 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
-  final _$_sortAscAtom = Atom(name: '_MainStore._sortAsc');
+  late final _$_sortAscAtom =
+      Atom(name: '_MainStore._sortAsc', context: context);
 
   @override
   bool get _sortAsc {
@@ -134,7 +139,7 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
-  final _$_errorAtom = Atom(name: '_MainStore._error');
+  late final _$_errorAtom = Atom(name: '_MainStore._error', context: context);
 
   @override
   dynamic get _error {
@@ -149,7 +154,8 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
-  final _$_isLoadingAtom = Atom(name: '_MainStore._isLoading');
+  late final _$_isLoadingAtom =
+      Atom(name: '_MainStore._isLoading', context: context);
 
   @override
   bool get _isLoading {
@@ -164,14 +170,16 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
-  final _$setupAsyncAction = AsyncAction('_MainStore.setup');
+  late final _$setupAsyncAction =
+      AsyncAction('_MainStore.setup', context: context);
 
   @override
   Future<void> setup() {
     return _$setupAsyncAction.run(() => super.setup());
   }
 
-  final _$_MainStoreActionController = ActionController(name: '_MainStore');
+  late final _$_MainStoreActionController =
+      ActionController(name: '_MainStore', context: context);
 
   @override
   void setDefaultFuelType(FuelType fuelType) {
