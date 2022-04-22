@@ -94,7 +94,7 @@ class DetailScreen extends StatelessWidget {
           child: InkWell(
             onTap: () {
               MapUtils.openMap(
-                  gasStation.location.longitude, gasStation.location.latitude);
+                  gasStation.location.latitude, gasStation.location.longitude);
             },
             child: const Icon(
                 Icons.assistant_navigation, color: Colors.white, size: 45),
